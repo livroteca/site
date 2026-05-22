@@ -1,0 +1,146 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const locale = "en" as const;
+const tracks = [
+  {
+    label: "In person in Bode",
+    title: "In the space, with the children.",
+    items: [
+      "Reading mediation and storytelling",
+      "Workshops (writing, drawing, music, capoeira, circus, audiovisual)",
+      "School support and literacy",
+      "Library organisation and support",
+      "Help with events and cultural actions (Cine Bode, cleanups, parties)",
+    ],
+  },
+  {
+    label: "Remote",
+    title: "From wherever you are.",
+    items: [
+      "Communication and social media",
+      "Graphic design and visual identity",
+      "Translation (PT ↔ EN, FR, IT, ES)",
+      "Tech — website, podcast, video, automations",
+      "Fundraising and partnerships (proposal writing, reporting)",
+    ],
+  },
+];
+---
+
+<Layout
+  title="Volunteer — Livroteca Brincante do Pina"
+  description="Volunteer in person in Bode or remotely: reading, workshops, communication, design, translation, tech."
+  locale={locale}
+>
+  <section>
+    <div class="container" style="max-width: 880px;">
+      <div class="section__label">Volunteer</div>
+      <h2 class="section__title">The Livroteca runs because people show up.</h2>
+      <p style="max-width: 62ch; margin-top: var(--space-4); font-size: 1.1rem; line-height: 1.55;">
+        The Livroteca has no stable paid team. It runs because people show up —
+        to mediate reading, run workshops, organise the library, document with
+        photo or video, teach a skill, translate, communicate. Volunteering
+        can be <strong>in person in Bode</strong> or <strong>remote</strong>.
+      </p>
+
+      <div class="vol-grid" style="margin-top: var(--space-12);">
+        {tracks.map((t) => (
+          <div class="vol-card">
+            <div class="vol-card__label">{t.label}</div>
+            <h3 class="vol-card__title">{t.title}</h3>
+            <ul class="vol-card__list">
+              {t.items.map((i) => <li>{i}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div class="vol-cta">
+        <h3 class="vol-cta__title">Got time and skills?</h3>
+        <p class="vol-cta__desc">
+          Email us telling us what you'd like to propose — frequency,
+          availability, skills, motivation. We'll get back to you.
+        </p>
+        <a href="mailto:contato@livroteca?subject=Volunteering" class="btn btn--primario vol-cta__btn">
+          contato@livroteca →
+        </a>
+        <p class="vol-cta__small">
+          <em>Coming soon: direct form on this page.</em>
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .vol-grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 768px) {
+    .vol-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .vol-card {
+    background: var(--cor-superficie);
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    padding: var(--space-6);
+    box-shadow: var(--sombra-bloco-md);
+  }
+  body[data-variant="riso"] .vol-card {
+    box-shadow:
+      4px 4px 0 var(--cor-amarelo),
+      -3px -3px 0 var(--cor-vermelho);
+  }
+  .vol-card__label {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-vermelho);
+    margin-bottom: var(--space-2);
+  }
+  .vol-card__title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0 0 var(--space-4);
+  }
+  .vol-card__list {
+    margin: 0;
+    padding-left: var(--space-5);
+    display: grid;
+    gap: var(--space-2);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .vol-cta {
+    margin-top: var(--space-16);
+    padding: var(--space-8);
+    background: var(--cor-amarelo);
+    border: var(--borda-xilo);
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+  .vol-cta__title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin: 0 0 var(--space-3);
+  }
+  .vol-cta__desc {
+    font-size: 1.05rem;
+    line-height: 1.55;
+    max-width: 48ch;
+    margin: 0 auto var(--space-6);
+  }
+  .vol-cta__btn { font-size: 1.1rem; }
+  .vol-cta__small {
+    margin-top: var(--space-4);
+    font-size: 0.85rem;
+    color: var(--cor-texto-fraco);
+  }
+</style>

@@ -1,0 +1,106 @@
+---
+import { useTranslations, localizePath, type Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const { pathname } = Astro.url;
+const isActive = (p: string) => pathname === p || (p !== "/" && p !== "/en/" && pathname.startsWith(p));
+
+const prefix = locale === "en" ? "/en" : "";
+const home = locale === "en" ? "/en/" : "/";
+
+const links = [
+  { href: home, label: t.nav.home, exact: true },
+  { href: `${prefix}/a-livroteca`, label: t.nav.livroteca },
+  { href: `${prefix}/as-atividades`, label: t.nav.atividades },
+  { href: `${prefix}/doar`, label: t.nav.doar },
+  { href: `${prefix}/voluntariar`, label: t.nav.voluntariar },
+  { href: `${prefix}/loja`, label: t.nav.loja },
+];
+
+const ptPath = localizePath("pt-BR", pathname);
+const enPath = localizePath("en", pathname);
+---
+
+<header class="header" transition:persist="header">
+  <div class="container header__inner">
+    <a class="header__logo" href={home}>
+      <img src="/images/logolivro.png" alt="Livroteca Brincante do Pina" />
+    </a>
+    <nav class="header__nav" aria-label="Navigation">
+      {links.map((l) => {
+        const active = l.exact ? pathname === l.href : isActive(l.href);
+        return <a href={l.href} class={active ? "is-active" : undefined}>{l.label}</a>;
+      })}
+    </nav>
+    <div style="display:flex; gap: var(--space-3); align-items:center;">
+      <div class="header__lang" role="group" aria-label="Language">
+        <a href={ptPath} data-astro-reload class={locale === "pt-BR" ? "is-active" : undefined} aria-current={locale === "pt-BR" ? "true" : undefined}>PT</a>
+        <span aria-hidden="true">|</span>
+        <a href={enPath} data-astro-reload class={locale === "en" ? "is-active" : undefined} aria-current={locale === "en" ? "true" : undefined}>EN</a>
+      </div>
+      <button class="header__menu-button" aria-label={t.menu}>≡ {t.menu}</button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header__lang a {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    padding: var(--space-2);
+    color: var(--cor-texto-fraco);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .header__lang a.is-active {
+    color: var(--cor-preto);
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 4px;
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    function localize(target, current) {
+      const stripped =
+        current === "/en" || current === "/en/" ? "/" : current.replace(/^\/en\//, "/");
+      if (target === "en") return stripped === "/" ? "/en/" : "/en" + stripped;
+      return stripped;
+    }
+
+    function update() {
+      const path = location.pathname;
+      const lang = path === "/en" || path.startsWith("/en/") ? "en" : "pt-BR";
+
+      document.querySelectorAll(".header__nav a").forEach((a) => {
+        const href = a.getAttribute("href") ?? "";
+        const exactSet = ["/", "/en/"];
+        const isActive = exactSet.includes(href)
+          ? path === href
+          : path === href || path.startsWith(href + "/");
+        a.classList.toggle("is-active", isActive);
+      });
+
+      const langLinks = document.querySelectorAll(".header__lang a");
+      const pt = langLinks[0];
+      const en = langLinks[1];
+      if (pt) {
+        pt.setAttribute("href", localize("pt-BR", path));
+        pt.classList.toggle("is-active", lang === "pt-BR");
+      }
+      if (en) {
+        en.setAttribute("href", localize("en", path));
+        en.classList.toggle("is-active", lang === "en");
+      }
+    }
+    document.addEventListener("astro:page-load", update);
+  })();
+</script>

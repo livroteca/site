@@ -1,0 +1,12 @@
+{
+  "name": "livroteca-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev:site": "pnpm --filter site dev",
+    "build:site": "pnpm --filter site build",
+    "dev:studio": "pnpm --filter studio dev",
+    "build:studio": "pnpm --filter studio build"
+  },
+  "packageManager": "pnpm@11.2.2"
+}

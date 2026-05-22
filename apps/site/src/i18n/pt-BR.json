@@ -1,0 +1,46 @@
+{
+  "locale_label": "PT",
+  "nav": {
+    "home": "Home",
+    "livroteca": "A Livroteca",
+    "atividades": "As Atividades",
+    "doar": "Doar",
+    "voluntariar": "Voluntariar",
+    "loja": "Loja"
+  },
+  "menu": "Menu",
+  "footer": {
+    "where_title": "Onde encontrar",
+    "where_local": "Comunidade do Bode",
+    "where_city": "Pina · Recife/PE",
+    "where_email": "contato@livroteca",
+    "where_hours": "Seg a sáb · 14h–18h",
+    "redes": "Redes",
+    "apoiar": "Apoiar",
+    "doar": "→ Doar",
+    "voluntariar": "→ Voluntariar",
+    "loja": "→ Loja",
+    "transparencia": "→ Transparência",
+    "made": "feito no Bode"
+  },
+  "calendar": {
+    "weekdays_short": ["S", "T", "Q", "Q", "S", "S", "D"],
+    "prev": "Mês anterior",
+    "next": "Próximo mês"
+  },
+  "events": {
+    "upcoming": "Próximos eventos",
+    "see_all": "Ver todas →",
+    "no_events": "Nenhum evento programado.",
+    "no_articles": "Nenhum artigo publicado ainda.",
+    "recurring": "Recorrente",
+    "event": "Evento",
+    "news": "Notícia",
+    "back": "← Voltar para As Atividades",
+    "event_when": "Quando",
+    "event_where": "Onde",
+    "event_recurrence": "Recorrência",
+    "event_details": "Detalhes do evento"
+  },
+  "translation_fallback": "Esta página ainda não foi traduzida. Mostrando a versão em português."
+}

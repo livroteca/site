@@ -1,0 +1,30 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import ArtigoDetail from "../../../components/ArtigoDetail.astro";
+import { getAllArtigos, getArtigoBySlug, titleFor, excerptFor, hasTranslation } from "../../../lib/content";
+
+export async function getStaticPaths() {
+  const artigos = await getAllArtigos();
+  return artigos.map((a) => ({ params: { slug: a.slug } }));
+}
+
+const locale = "en" as const;
+const { slug } = Astro.params;
+const artigo = await getArtigoBySlug(slug!);
+if (!artigo) {
+  return Astro.redirect("/en/as-atividades");
+}
+
+const showFallback = !hasTranslation(artigo, "en");
+const title = titleFor(artigo, locale);
+const excerpt = excerptFor(artigo, locale);
+---
+
+<Layout
+  title={`${title} — Livroteca`}
+  description={excerpt || undefined}
+  locale={locale}
+  translationFallback={showFallback}
+>
+  <ArtigoDetail artigo={artigo} locale={locale} />
+</Layout>

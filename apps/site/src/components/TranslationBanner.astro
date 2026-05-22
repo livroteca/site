@@ -1,0 +1,26 @@
+---
+import { useTranslations, type Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<div class="trans-banner" role="status">
+  <span>{t.translation_fallback}</span>
+</div>
+
+<style>
+  .trans-banner {
+    background: var(--cor-amarelo);
+    color: var(--cor-preto);
+    border-bottom: var(--borda-fina);
+    padding: var(--space-2) var(--space-4);
+    text-align: center;
+    font-size: 0.9rem;
+    font-family: var(--font-corpo);
+  }
+</style>

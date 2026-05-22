@@ -1,0 +1,146 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Calendario from "../components/Calendario.astro";
+import ProximosEventos from "../components/ProximosEventos.astro";
+import UltimosArtigos from "../components/UltimosArtigos.astro";
+import { getEvents, expandOccurrences } from "../lib/events";
+import { getRecentArticles } from "../lib/content";
+
+const locale = "pt-BR" as const;
+const now = new Date();
+const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+const windowStart = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+const windowEnd = new Date(now.getFullYear(), now.getMonth() + 12, 0);
+
+const [events, recentArticles] = await Promise.all([
+  getEvents(),
+  getRecentArticles(3),
+]);
+const occurrences = expandOccurrences(events, windowStart, windowEnd, locale);
+const upcoming = occurrences.filter((o) => o.start >= now);
+---
+
+<Layout>
+  <section class="hero" aria-label="Apresentação">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero__inner">
+        <span class="hero__eyebrow">Bode · Pina · Recife</span>
+        <h1 class="hero__title">Cultura, leitura e brincadeira no coração do Bode.</h1>
+        <p class="hero__lede">
+          Há quase 30 anos, a Livroteca Brincante do Pina abre suas portas para
+          crianças e jovens da comunidade — biblioteca, capoeira, música, circo,
+          cinema e poesia, conduzidos por Kcal Gomes e por uma rede de moradores.
+        </p>
+        <div class="hero__actions">
+          <button type="button" class="btn btn--secundario" data-open-modal>Ajudar</button>
+          <a href="/a-livroteca" class="btn btn--texto" style="color: var(--cor-papel);">Conhecer a Livroteca →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quem-somos">
+    <div class="container">
+      <div class="quem-somos__grid">
+        <div class="quem-somos__texto">
+          <div class="section__label">Quem somos</div>
+          <h2 class="section__title">Uma biblioteca dentro da favela.</h2>
+          <p>
+            A Livroteca Brincante do Pina nasceu em 1997, quando Kcal Gomes
+            transformou sua casa de palafita em um espaço de leitura para as
+            crianças do Bode. Quase trinta anos depois, somos um centro de
+            cultura popular que segue funcionando por dedicação comunitária —
+            doações, voluntariado e, agora, uma loja própria.
+          </p>
+          <p style="margin-top: var(--space-4)">
+            <a href="/a-livroteca" class="btn btn--texto">→ Saber mais sobre a Livroteca</a>
+          </p>
+        </div>
+        <div class="quem-somos__foto">
+          <img src="/images/passeio_barco.jpg" alt="Passeio de barco com as crianças da Livroteca" />
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat-card stat-card--amarelo">
+          <div class="stat-card__num">8.000</div>
+          <div class="stat-card__label">livros no acervo</div>
+        </div>
+        <div class="stat-card stat-card--verde">
+          <div class="stat-card__num">120+</div>
+          <div class="stat-card__label">crianças cadastradas</div>
+        </div>
+        <div class="stat-card stat-card--vermelho">
+          <div class="stat-card__num">1997</div>
+          <div class="stat-card__label">ano de fundação, no Bode</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: var(--cor-superficie); border-top: var(--borda-fina); border-bottom: var(--borda-fina);">
+    <div class="container">
+      <div class="section__label">Programação</div>
+      <h2 class="section__title">Agenda da Livroteca</h2>
+      <div class="calendario-wrap">
+        <Calendario month={monthStart} occurrences={occurrences} locale={locale} />
+        <ProximosEventos occurrences={upcoming} locale={locale} />
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section__label">No espaço</div>
+      <h2 class="section__title">Últimas notícias</h2>
+      <UltimosArtigos artigos={recentArticles} locale={locale} />
+      <p style="margin-top: var(--space-8);">
+        <a href="/as-atividades" class="btn btn--texto">→ Ver tudo</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="citacao" style="padding:0;">
+    <div class="citacao__inner">
+      <p class="citacao__quote">"Cada livro é uma carta de alforria."</p>
+      <div class="citacao__autor">— Kcal Gomes, fundador</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section__label">Apoiar</div>
+      <h2 class="section__title">Você sustenta a Livroteca.</h2>
+      <p style="max-width: 60ch; margin-bottom: var(--space-8);">
+        A Livroteca não recebe financiamento estável de governo, empresa ou ONG.
+        Existe há quase 30 anos por dedicação comunitária — e por gente como você.
+      </p>
+      <div class="apoiar">
+        <a href="/doar" class="cta cta--doar">
+          <div class="cta__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="cta__title">Doar</div>
+          <p class="cta__desc">Pix, transferência ou doação de livros e materiais — direto no funcionamento do espaço.</p>
+          <div class="cta__arrow">Doar agora →</div>
+        </a>
+        <a href="/voluntariar" class="cta cta--voluntariar">
+          <div class="cta__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 11V7a4 4 0 1 0-8 0v4"/><path d="M3 11h18l-1.5 9.5a2 2 0 0 1-2 1.5h-11a2 2 0 0 1-2-1.5L3 11z"/></svg>
+          </div>
+          <div class="cta__title">Voluntariar</div>
+          <p class="cta__desc">Presencial no Bode ou remoto: leitura, oficinas, comunicação, design, tradução, tech.</p>
+          <div class="cta__arrow">Quero contribuir →</div>
+        </a>
+        <a href="/loja" class="cta cta--loja">
+          <div class="cta__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <div class="cta__title">Loja</div>
+          <p class="cta__desc">Produtos da Livroteca: cada compra ajuda a auto-sustentar o projeto a longo prazo.</p>
+          <div class="cta__arrow">Visitar loja →</div>
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,281 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const pixKey = "[chave-pix-a-definir]";
+---
+
+<Layout
+  title="Doar — Livroteca Brincante do Pina"
+  description="Sustente a Livroteca: PIX, Mercado Pago, transferência ou doação de livros e materiais."
+>
+  <section>
+    <div class="container">
+      <div style="max-width: 760px;">
+        <div class="section__label">Doar</div>
+        <h2 class="section__title">Sua doação sustenta a Livroteca.</h2>
+        <p style="margin-top: var(--space-4); font-size: 1.1rem; line-height: 1.55;">
+          A Livroteca não recebe financiamento estável de governo, empresa ou
+          ONG. Todo recurso recebido entra direto no funcionamento do espaço:
+          aluguel, manutenção, materiais, acervo, alimentação para as crianças,
+          oficinas e ações.
+        </p>
+      </div>
+
+      <div class="doar-pix-hero" style="margin-top: var(--space-12);">
+        <div class="doar-pix-hero__head">
+          <span class="doar-pix-hero__eyebrow">Caminho mais rápido — no Brasil</span>
+          <h3 class="doar-pix-hero__title">PIX</h3>
+        </div>
+        <div class="doar-pix-hero__body">
+          <div class="doar-pix-hero__qr" aria-hidden="true">
+            <span>QR code PIX<br/><em>[a definir]</em></span>
+          </div>
+          <div class="doar-pix-hero__key">
+            <span class="doar-eyebrow">Chave PIX</span>
+            <code class="doar-pix-hero__code">{pixKey}</code>
+            <button type="button" class="btn btn--secundario doar-pix-hero__copy" data-copy={pixKey} disabled>
+              Copiar chave
+            </button>
+            <p class="doar-pix-hero__note">
+              Sem taxas, transferência imediata. Toda doação entra direto no
+              espaço.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="doar-others" style="margin-top: var(--space-12);">
+        <article class="doar-other">
+          <span class="doar-eyebrow">Cartão ou boleto</span>
+          <h3 class="doar-other__title">Mercado Pago</h3>
+          <p class="doar-other__desc">Doação avulsa ou recorrente, com cartão de crédito ou boleto.</p>
+          <a href="#" class="btn btn--primario doar-other__cta" data-disabled>
+            Doar via Mercado Pago →
+          </a>
+          <p class="doar-other__small"><em>Link a configurar.</em></p>
+        </article>
+
+        <article class="doar-other">
+          <span class="doar-eyebrow">Transferência bancária</span>
+          <h3 class="doar-other__title">Conta da Livroteca</h3>
+          <dl class="doar-bank">
+            <dt>Banco</dt><dd>[a definir]</dd>
+            <dt>Agência</dt><dd>[a definir]</dd>
+            <dt>Conta</dt><dd>[a definir]</dd>
+            <dt>Favorecido</dt><dd>Livroteca Brincante do Pina</dd>
+            <dt>CNPJ</dt><dd>[a definir]</dd>
+          </dl>
+        </article>
+
+        <article class="doar-other">
+          <span class="doar-eyebrow">From abroad</span>
+          <h3 class="doar-other__title">International donors</h3>
+          <p class="doar-other__desc">
+            No PIX in your country? Email us — we'll arrange the best route
+            (international transfer or a platform we've used before).
+          </p>
+          <a href="mailto:contato@livroteca?subject=Doação%20internacional" class="btn btn--vermelho doar-other__cta">
+            contato@livroteca →
+          </a>
+        </article>
+      </div>
+
+      <div class="doar-livros">
+        <h3 class="doar-livros__title">Doação de livros e materiais</h3>
+        <p>
+          A Livroteca recebe doações de <strong>livros em bom estado</strong> e
+          de <strong>materiais para oficinas</strong> — instrumentos musicais,
+          material escolar, material de arte, esporte, audiovisual. Combine a
+          entrega antes via email ou pelas redes sociais.
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .doar-eyebrow {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-vermelho);
+  }
+
+  /* ===== Hero PIX (full width) ===== */
+  .doar-pix-hero {
+    background: var(--cor-superficie);
+    border: var(--borda-xilo);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--sombra-bloco-md);
+  }
+  body[data-variant="riso"] .doar-pix-hero {
+    box-shadow:
+      6px 6px 0 var(--cor-amarelo),
+      -4px -4px 0 var(--cor-vermelho);
+  }
+  .doar-pix-hero__head {
+    padding: var(--space-6) var(--space-6) 0;
+  }
+  .doar-pix-hero__eyebrow {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-vermelho);
+  }
+  .doar-pix-hero__title {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: var(--space-2) 0 0;
+  }
+  @media (min-width: 768px) { .doar-pix-hero__title { font-size: 4rem; } }
+  .doar-pix-hero__body {
+    display: grid;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    align-items: start;
+  }
+  @media (min-width: 720px) {
+    .doar-pix-hero__body {
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-8);
+      padding: var(--space-8);
+    }
+  }
+  .doar-pix-hero__qr {
+    aspect-ratio: 1;
+    max-width: 240px;
+    width: 100%;
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    background: var(--cor-papel);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    color: var(--cor-texto-fraco);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .doar-pix-hero__qr em { font-style: normal; opacity: 0.6; }
+  .doar-pix-hero__key {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+  .doar-pix-hero__code {
+    background: var(--cor-papel);
+    border: var(--borda-fina);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 1rem;
+    word-break: break-all;
+    line-height: 1.4;
+  }
+  .doar-pix-hero__copy {
+    align-self: flex-start;
+  }
+  .doar-pix-hero__note {
+    font-size: 0.95rem;
+    color: var(--cor-texto-fraco);
+    margin: var(--space-2) 0 0;
+    line-height: 1.5;
+  }
+
+  /* ===== Cards autres (3-col) ===== */
+  .doar-others {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 768px) {
+    .doar-others { grid-template-columns: repeat(3, 1fr); }
+  }
+  .doar-other {
+    background: var(--cor-superficie);
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    box-shadow: var(--sombra-bloco-sm);
+    min-width: 0;
+  }
+  body[data-variant="riso"] .doar-other {
+    box-shadow:
+      3px 3px 0 var(--cor-amarelo),
+      -2px -2px 0 var(--cor-vermelho);
+  }
+  .doar-other__title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .doar-other__desc {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin: 0;
+    flex: 1;
+  }
+  .doar-other__cta {
+    width: 100%;
+    justify-content: center;
+    margin-top: auto;
+  }
+  .doar-other__cta[data-disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .doar-other__small {
+    font-size: 0.85rem;
+    color: var(--cor-texto-fraco);
+    margin: 0;
+  }
+
+  .doar-bank {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-2) var(--space-4);
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    min-width: 0;
+  }
+  .doar-bank dt {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cor-texto-fraco);
+  }
+  .doar-bank dd { margin: 0; word-break: break-word; }
+
+  /* ===== Livros section ===== */
+  .doar-livros {
+    margin-top: var(--space-16);
+    max-width: 720px;
+  }
+  .doar-livros__title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    margin: 0 0 var(--space-3);
+  }
+  .doar-livros p {
+    font-size: 1.05rem;
+    line-height: 1.55;
+    margin: 0;
+  }
+</style>

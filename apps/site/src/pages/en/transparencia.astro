@@ -1,0 +1,123 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getDocumentosTransparencia, titleFor, fmtDate } from "../../lib/content";
+
+const locale = "en" as const;
+const docs = await getDocumentosTransparencia();
+
+const CATEGORIA_EN: Record<string, string> = {
+  balanco: "Balance sheet",
+  ata: "Minutes",
+  prestacao: "Account statement",
+  estatuto: "Statute",
+  outro: "Other",
+};
+const categoriaLabel = (c?: string) => (c ? CATEGORIA_EN[c] ?? c : "Document");
+---
+
+<Layout
+  title="Transparency — Livroteca Brincante do Pina"
+  description="Institutional documents from the Livroteca: balance sheets, minutes, statements, statute."
+  locale={locale}
+>
+  <section>
+    <div class="container" style="max-width: 880px;">
+      <div class="section__label">Transparency</div>
+      <h2 class="section__title">Institutional documents.</h2>
+      <p style="max-width: 60ch; margin-top: var(--space-4); font-size: 1.05rem;">
+        The Livroteca runs on community dedication and donations. We make
+        balance sheets, minutes, account statements and the association's
+        statute available here.
+      </p>
+
+      <div class="transp" style="margin-top: var(--space-12);">
+        {docs.length === 0 && (
+          <p style="color: var(--cor-texto-fraco);">
+            No documents published yet. Check back soon.
+          </p>
+        )}
+        {docs.map((d) => (
+          <a class="transp__item" href={d.fileUrl} target="_blank" rel="noopener">
+            <div class="transp__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <path d="M14 2v6h6"/>
+              </svg>
+            </div>
+            <div class="transp__body">
+              <span class="transp__cat">{categoriaLabel(d.category)}</span>
+              <div class="transp__title">{titleFor(d as any, locale)}</div>
+              <div class="transp__date">{fmtDate(d.date, locale)}</div>
+            </div>
+            <div class="transp__arrow" aria-hidden="true">↓</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .transp { display: flex; flex-direction: column; gap: var(--space-3); }
+  .transp__item {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: var(--space-4);
+    align-items: center;
+    background: var(--cor-superficie);
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    text-decoration: none;
+    color: var(--cor-texto);
+    box-shadow: var(--sombra-bloco-sm);
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+  .transp__item:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--sombra-bloco-md);
+    color: var(--cor-texto);
+  }
+  body[data-variant="riso"] .transp__item {
+    box-shadow:
+      3px 3px 0 var(--cor-amarelo),
+      -2px -2px 0 var(--cor-vermelho);
+  }
+  body[data-variant="riso"] .transp__item:hover {
+    box-shadow:
+      5px 5px 0 var(--cor-amarelo),
+      -3px -3px 0 var(--cor-vermelho);
+  }
+  .transp__icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    background: var(--cor-amarelo);
+    border: var(--borda-fina);
+    border-radius: var(--radius-sm);
+    color: var(--cor-preto);
+  }
+  .transp__cat {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-vermelho);
+  }
+  .transp__title { font-weight: 600; font-size: 1.05rem; margin-top: 2px; }
+  .transp__date {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cor-texto-fraco);
+    margin-top: 4px;
+  }
+  .transp__arrow {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--cor-texto-fraco);
+  }
+</style>

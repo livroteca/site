@@ -1,0 +1,139 @@
+---
+import { buildMonthGrid, monthLabel, fmtHora, weekdayShort, monthShort, type Occurrence } from "../lib/events";
+import { useTranslations, type Locale } from "../lib/i18n";
+
+interface Props {
+  month: Date;
+  occurrences: Occurrence[];
+  locale: Locale;
+  monthsBack?: number;
+  monthsAhead?: number;
+}
+
+const { month, occurrences, locale, monthsBack = 6, monthsAhead = 12 } = Astro.props;
+const t = useTranslations(locale);
+const prefix = locale === "en" ? "/en" : "";
+
+const months: Date[] = [];
+for (let i = -monthsBack; i <= monthsAhead; i++) {
+  months.push(new Date(month.getFullYear(), month.getMonth() + i, 1));
+}
+const initialKey = monthKey(month);
+
+function monthKey(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function popoverHeader(d: Date, count: number) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const isToday = dayStart.getTime() === today.getTime();
+  const w = weekdayShort(d, locale);
+  const mon = monthShort(d, locale).toLowerCase();
+  const todayLabel = locale === "en" ? " · today" : " · hoje";
+  const eventLabel = count === 1 ? "" : ` · ${count} ${locale === "en" ? "events" : "eventos"}`;
+  return isToday ? `${w} · ${d.getDate()} ${mon}${todayLabel}` : `${w} · ${d.getDate()} ${mon}${eventLabel}`;
+}
+---
+
+<div class="calendario" aria-label={t.events.upcoming} data-calendario data-initial-month={initialKey}>
+  <div class="calendario__head">
+    <div class="calendario__month" data-current-label>{monthLabel(month, locale)}</div>
+    <div class="calendario__nav">
+      <button type="button" aria-label={t.calendar.prev} data-nav-prev>◀</button>
+      <button type="button" aria-label={t.calendar.next} data-nav-next>▶</button>
+    </div>
+  </div>
+
+  {months.map((m) => {
+    const cells = buildMonthGrid(m, occurrences);
+    const key = monthKey(m);
+    const isInitial = key === initialKey;
+    return (
+      <div
+        class="calendario__grid"
+        data-month={key}
+        data-month-label={monthLabel(m, locale)}
+        hidden={!isInitial}
+      >
+        {t.calendar.weekdays_short.map((w) => <div class="calendario__weekday">{w}</div>)}
+        {cells.map((cell) => {
+          const classes = ["calendario__day"];
+          if (!cell.inMonth) classes.push("calendario__day--out");
+          if (cell.isToday) classes.push("calendario__day--today");
+          const hasEvents = cell.occurrences.length > 0;
+          return (
+            <div class={classes.join(" ")} tabindex={hasEvents ? 0 : undefined}>
+              <span class="calendario__num">{cell.date.getDate()}</span>
+              {hasEvents && (
+                <div class="calendario__dots">
+                  {cell.occurrences.map((o) => (
+                    <span class={o.recurring ? "dot--recorrente" : "dot--pontual"}></span>
+                  ))}
+                </div>
+              )}
+              {hasEvents && (
+                <div class="calendario__popover" role="dialog">
+                  <div class="calendario__popover-day">{popoverHeader(cell.date, cell.occurrences.length)}</div>
+                  {cell.occurrences.map((o) => (
+                    <a href={`${prefix}/as-atividades/${o.slug}`} class="calendario__popover-event">
+                      <span class={`calendario__popover-event__type ${o.recurring ? "dot--recorrente" : "dot--pontual"}`}></span>
+                      <div>
+                        <div class="calendario__popover-event__hora">{fmtHora(o.start, locale)}</div>
+                        <div class="calendario__popover-event__title">{o.title}</div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  })}
+</div>
+
+<style>
+  .calendario__grid[hidden] { display: none; }
+</style>
+
+<script is:inline>
+  (function () {
+    function setup(root) {
+      const grids = Array.from(root.querySelectorAll("[data-month]"));
+      const label = root.querySelector("[data-current-label]");
+      const prev = root.querySelector("[data-nav-prev]");
+      const next = root.querySelector("[data-nav-next]");
+      let idx = grids.findIndex((g) => g.dataset.month === root.dataset.initialMonth);
+      if (idx < 0) idx = 0;
+
+      function render() {
+        grids.forEach((g, i) => {
+          if (i === idx) g.removeAttribute("hidden");
+          else g.setAttribute("hidden", "");
+        });
+        label.textContent = grids[idx].dataset.monthLabel;
+        prev.disabled = idx === 0;
+        next.disabled = idx === grids.length - 1;
+      }
+
+      prev.addEventListener("click", () => { if (idx > 0) { idx--; render(); } });
+      next.addEventListener("click", () => { if (idx < grids.length - 1) { idx++; render(); } });
+
+      render();
+    }
+
+    function init() {
+      document.querySelectorAll("[data-calendario]").forEach((el) => {
+        if (el.dataset.calendarioReady) return;
+        el.dataset.calendarioReady = "1";
+        setup(el);
+      });
+    }
+
+    init();
+    document.addEventListener("astro:page-load", init);
+  })();
+</script>

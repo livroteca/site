@@ -1,0 +1,34 @@
+# dependencies
+node_modules/
+
+# build outputs
+dist/
+.astro/
+
+# environment
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# claude code local settings
+.claude/settings.local.json
+
+# moodboard — exclude unrelated CV
+moodboard/cv_ste.pdf
+
+# sanity
+.sanity/
+
+# OS
+Thumbs.db

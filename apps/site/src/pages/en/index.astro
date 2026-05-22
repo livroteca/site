@@ -1,0 +1,148 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Calendario from "../../components/Calendario.astro";
+import ProximosEventos from "../../components/ProximosEventos.astro";
+import UltimosArtigos from "../../components/UltimosArtigos.astro";
+import { getEvents, expandOccurrences } from "../../lib/events";
+import { getRecentArticles } from "../../lib/content";
+
+const locale = "en" as const;
+const now = new Date();
+const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+const windowStart = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+const windowEnd = new Date(now.getFullYear(), now.getMonth() + 12, 0);
+
+const [events, recentArticles] = await Promise.all([
+  getEvents(),
+  getRecentArticles(3),
+]);
+const occurrences = expandOccurrences(events, windowStart, windowEnd, locale);
+const upcoming = occurrences.filter((o) => o.start >= now);
+---
+
+<Layout locale={locale}>
+  <section class="hero" aria-label="Introduction">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero__inner">
+        <span class="hero__eyebrow">Bode · Pina · Recife</span>
+        <h1 class="hero__title">Culture, reading and play in the heart of Bode.</h1>
+        <p class="hero__lede">
+          For nearly 30 years, Livroteca Brincante do Pina has opened its
+          doors to children and youth from the community — library, capoeira,
+          music, circus, cinema and poetry, led by Kcal Gomes and a network of
+          residents.
+        </p>
+        <div class="hero__actions">
+          <button type="button" class="btn btn--secundario" data-open-modal>Help</button>
+          <a href="/en/a-livroteca" class="btn btn--texto" style="color: var(--cor-papel);">Discover the Livroteca →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quem-somos">
+    <div class="container">
+      <div class="quem-somos__grid">
+        <div class="quem-somos__texto">
+          <div class="section__label">Who we are</div>
+          <h2 class="section__title">A library inside the favela.</h2>
+          <p>
+            Livroteca Brincante do Pina was born in 1997, when Kcal Gomes
+            turned his stilt house into a reading space for the children of
+            Bode. Almost thirty years later, we are a popular culture centre
+            that keeps running on community dedication — donations,
+            volunteering and, now, a shop of our own.
+          </p>
+          <p style="margin-top: var(--space-4)">
+            <a href="/en/a-livroteca" class="btn btn--texto">→ Learn more about the Livroteca</a>
+          </p>
+        </div>
+        <div class="quem-somos__foto">
+          <img src="/images/passeio_barco.jpg" alt="Boat trip with the Livroteca children" />
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat-card stat-card--amarelo">
+          <div class="stat-card__num">8,000</div>
+          <div class="stat-card__label">books in the collection</div>
+        </div>
+        <div class="stat-card stat-card--verde">
+          <div class="stat-card__num">120+</div>
+          <div class="stat-card__label">children registered</div>
+        </div>
+        <div class="stat-card stat-card--vermelho">
+          <div class="stat-card__num">1997</div>
+          <div class="stat-card__label">founded in Bode</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: var(--cor-superficie); border-top: var(--borda-fina); border-bottom: var(--borda-fina);">
+    <div class="container">
+      <div class="section__label">Programme</div>
+      <h2 class="section__title">Livroteca calendar</h2>
+      <div class="calendario-wrap">
+        <Calendario month={monthStart} occurrences={occurrences} locale={locale} />
+        <ProximosEventos occurrences={upcoming} locale={locale} />
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section__label">From the space</div>
+      <h2 class="section__title">Latest news</h2>
+      <UltimosArtigos artigos={recentArticles} locale={locale} />
+      <p style="margin-top: var(--space-8);">
+        <a href="/en/as-atividades" class="btn btn--texto">→ See all</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="citacao" style="padding:0;">
+    <div class="citacao__inner">
+      <p class="citacao__quote">"Every book is a letter of liberation."</p>
+      <div class="citacao__autor">— Kcal Gomes, founder</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section__label">Support</div>
+      <h2 class="section__title">You sustain the Livroteca.</h2>
+      <p style="max-width: 60ch; margin-bottom: var(--space-8);">
+        The Livroteca receives no stable funding from government, companies or
+        NGOs. It has existed for almost 30 years thanks to community
+        dedication — and people like you.
+      </p>
+      <div class="apoiar">
+        <a href="/en/doar" class="cta cta--doar">
+          <div class="cta__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="cta__title">Donate</div>
+          <p class="cta__desc">PIX, transfer or donation of books and materials — straight into running the space.</p>
+          <div class="cta__arrow">Donate now →</div>
+        </a>
+        <a href="/en/voluntariar" class="cta cta--voluntariar">
+          <div class="cta__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 11V7a4 4 0 1 0-8 0v4"/><path d="M3 11h18l-1.5 9.5a2 2 0 0 1-2 1.5h-11a2 2 0 0 1-2-1.5L3 11z"/></svg>
+          </div>
+          <div class="cta__title">Volunteer</div>
+          <p class="cta__desc">In person in Bode or remote: reading, workshops, communication, design, translation, tech.</p>
+          <div class="cta__arrow">Get involved →</div>
+        </a>
+        <a href="/en/loja" class="cta cta--loja">
+          <div class="cta__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <div class="cta__title">Shop</div>
+          <p class="cta__desc">Livroteca products: each purchase helps self-sustain the project long term.</p>
+          <div class="cta__arrow">Visit shop →</div>
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

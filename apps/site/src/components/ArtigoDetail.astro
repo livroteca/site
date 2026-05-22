@@ -1,0 +1,194 @@
+---
+import {
+  portableTextToHtml,
+  coverUrl,
+  titleFor,
+  excerptFor,
+  portableTextFor,
+  hasTranslation,
+  fmtDate,
+  type Artigo,
+} from "../lib/content";
+import { fmtHora, weekdayLong } from "../lib/events";
+import { useTranslations, type Locale } from "../lib/i18n";
+
+interface Props {
+  artigo: Artigo;
+  locale: Locale;
+}
+
+const { artigo, locale } = Astro.props;
+const t = useTranslations(locale);
+const prefix = locale === "en" ? "/en" : "";
+
+const fallbackToPt = locale === "en" && !hasTranslation(artigo, "en");
+const effectiveLocale: Locale = fallbackToPt ? "pt-BR" : locale;
+
+const title = titleFor(artigo, effectiveLocale);
+const excerpt = excerptFor(artigo, effectiveLocale);
+const cover = coverUrl(artigo.cover, 1600);
+const bodyHtml = portableTextToHtml(portableTextFor(artigo, effectiveLocale));
+const isEvent = artigo.type === "evento";
+const eventStart = artigo.event?.start ? new Date(artigo.event.start) : null;
+const eventEnd = artigo.event?.end ? new Date(artigo.event.end) : null;
+const isRecurring = Boolean(artigo.event?.recurrence);
+---
+
+<article class="artigo">
+  <div class="container">
+    <div class="artigo__head">
+      <span class={`badge ${isRecurring ? "badge--recorrente" : isEvent ? "badge--pontual" : "badge--noticia"}`}>
+        {isRecurring ? t.events.recurring : isEvent ? t.events.event : t.events.news}
+      </span>
+      <h1 class="artigo__title">{title}</h1>
+      <div class="artigo__meta">
+        <span>{fmtDate(artigo.date, locale)}</span>
+        {artigo.authors && artigo.authors.length > 0 && (
+          <span> · {artigo.authors.map((a) => a.name).join(", ")}</span>
+        )}
+      </div>
+      {excerpt && <p class="artigo__excerpt">{excerpt}</p>}
+    </div>
+
+    {cover && (
+      <div class="artigo__cover">
+        <img src={cover} alt={title} />
+      </div>
+    )}
+
+    {isEvent && eventStart && (
+      <div class="artigo__evento-info">
+        <h2 class="artigo__evento-title">{t.events.event_details}</h2>
+        <dl>
+          <dt>{t.events.event_when}</dt>
+          <dd>
+            {weekdayLong(eventStart, locale)} · {fmtDate(eventStart.toISOString(), locale)} · {fmtHora(eventStart, locale)}
+            {eventEnd && ` – ${fmtHora(eventEnd, locale)}`}
+          </dd>
+          {artigo.event?.location && (
+            <>
+              <dt>{t.events.event_where}</dt>
+              <dd>{artigo.event.location}</dd>
+            </>
+          )}
+          {isRecurring && (
+            <>
+              <dt>{t.events.event_recurrence}</dt>
+              <dd><code>{artigo.event!.recurrence}</code></dd>
+            </>
+          )}
+        </dl>
+      </div>
+    )}
+
+    {bodyHtml && <div class="artigo__body" set:html={bodyHtml} />}
+
+    <p style="margin-top: var(--space-12);">
+      <a href={`${prefix}/as-atividades`} class="btn btn--texto">{t.events.back}</a>
+    </p>
+  </div>
+</article>
+
+<style is:global>
+  .artigo { padding: var(--space-12) 0; }
+  @media (min-width: 1024px) { .artigo { padding: var(--space-16) 0; } }
+  .artigo .container { max-width: 760px; }
+
+  .artigo__head { margin-bottom: var(--space-8); }
+  .artigo__title {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: var(--space-3) 0 var(--space-3);
+  }
+  @media (min-width: 768px) { .artigo__title { font-size: 3.2rem; } }
+  .artigo__meta {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-texto-fraco);
+    margin-bottom: var(--space-4);
+  }
+  .artigo__excerpt {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin: var(--space-4) 0 0;
+  }
+
+  .artigo__cover {
+    margin: var(--space-8) 0;
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: var(--sombra-bloco-md);
+  }
+  body[data-variant="riso"] .artigo__cover {
+    box-shadow:
+      4px 4px 0 var(--cor-amarelo),
+      -3px -3px 0 var(--cor-vermelho);
+  }
+  .artigo__cover img { width: 100%; height: auto; display: block; }
+
+  .artigo__evento-info {
+    background: var(--cor-amarelo);
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    padding: var(--space-6);
+    margin: var(--space-8) 0;
+  }
+  .artigo__evento-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    margin-bottom: var(--space-4);
+  }
+  .artigo__evento-info dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-2) var(--space-6);
+    margin: 0;
+  }
+  .artigo__evento-info dt {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cor-preto);
+  }
+  .artigo__evento-info dd { margin: 0; }
+
+  .artigo__body {
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+  .artigo__body p { margin: 0 0 var(--space-4); }
+  .artigo__body h2 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    margin: var(--space-8) 0 var(--space-3);
+  }
+  .artigo__body h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    margin: var(--space-6) 0 var(--space-2);
+  }
+  .artigo__body blockquote {
+    border-left: 4px solid var(--cor-vermelho);
+    padding-left: var(--space-4);
+    margin: var(--space-6) 0;
+    font-family: var(--font-acento);
+    font-size: 1.5rem;
+    color: var(--cor-preto);
+  }
+  .artigo__body figure {
+    margin: var(--space-6) 0;
+    border: var(--borda-fina);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .artigo__body figure img { width: 100%; height: auto; display: block; }
+</style>

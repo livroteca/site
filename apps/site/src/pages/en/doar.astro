@@ -1,0 +1,256 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const pixKey = "[pix-key-tbd]";
+const locale = "en" as const;
+---
+
+<Layout
+  title="Donate — Livroteca Brincante do Pina"
+  description="Sustain the Livroteca: PIX, Mercado Pago, transfer, or donate books and materials."
+  locale={locale}
+>
+  <section>
+    <div class="container">
+      <div style="max-width: 760px;">
+        <div class="section__label">Donate</div>
+        <h2 class="section__title">Your donation sustains the Livroteca.</h2>
+        <p style="margin-top: var(--space-4); font-size: 1.1rem; line-height: 1.55;">
+          The Livroteca receives no stable funding from government, companies
+          or NGOs. Every resource we receive goes straight into running the
+          space: rent, maintenance, materials, the collection, food for the
+          children, workshops and actions.
+        </p>
+      </div>
+
+      <div class="doar-pix-hero" style="margin-top: var(--space-12);">
+        <div class="doar-pix-hero__head">
+          <span class="doar-pix-hero__eyebrow">Fastest path — within Brazil</span>
+          <h3 class="doar-pix-hero__title">PIX</h3>
+        </div>
+        <div class="doar-pix-hero__body">
+          <div class="doar-pix-hero__qr" aria-hidden="true">
+            <span>PIX QR code<br/><em>[tbd]</em></span>
+          </div>
+          <div class="doar-pix-hero__key">
+            <span class="doar-eyebrow">PIX key</span>
+            <code class="doar-pix-hero__code">{pixKey}</code>
+            <button type="button" class="btn btn--secundario doar-pix-hero__copy" data-copy={pixKey} disabled>
+              Copy key
+            </button>
+            <p class="doar-pix-hero__note">
+              No fees, instant transfer. Every donation goes straight into the space.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="doar-others" style="margin-top: var(--space-12);">
+        <article class="doar-other">
+          <span class="doar-eyebrow">Card or boleto</span>
+          <h3 class="doar-other__title">Mercado Pago</h3>
+          <p class="doar-other__desc">One-off or recurring donations with credit card or boleto.</p>
+          <a href="#" class="btn btn--primario doar-other__cta" data-disabled>
+            Donate via Mercado Pago →
+          </a>
+          <p class="doar-other__small"><em>Link to be configured.</em></p>
+        </article>
+
+        <article class="doar-other">
+          <span class="doar-eyebrow">Bank transfer</span>
+          <h3 class="doar-other__title">Livroteca account</h3>
+          <dl class="doar-bank">
+            <dt>Bank</dt><dd>[tbd]</dd>
+            <dt>Branch</dt><dd>[tbd]</dd>
+            <dt>Account</dt><dd>[tbd]</dd>
+            <dt>Beneficiary</dt><dd>Livroteca Brincante do Pina</dd>
+            <dt>CNPJ</dt><dd>[tbd]</dd>
+          </dl>
+        </article>
+
+        <article class="doar-other">
+          <span class="doar-eyebrow">From abroad</span>
+          <h3 class="doar-other__title">International donors</h3>
+          <p class="doar-other__desc">
+            No PIX in your country? Email us — we'll arrange the best route
+            (international transfer or a platform we've used before).
+          </p>
+          <a href="mailto:contato@livroteca?subject=International%20donation" class="btn btn--vermelho doar-other__cta">
+            contato@livroteca →
+          </a>
+        </article>
+      </div>
+
+      <div class="doar-livros">
+        <h3 class="doar-livros__title">Books and materials</h3>
+        <p>
+          The Livroteca accepts donations of <strong>books in good condition</strong>
+          and of <strong>workshop materials</strong> — musical instruments, school
+          supplies, art and sports materials, audiovisual equipment. Arrange
+          delivery beforehand via email or social media.
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .doar-eyebrow {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-vermelho);
+  }
+
+  .doar-pix-hero {
+    background: var(--cor-superficie);
+    border: var(--borda-xilo);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--sombra-bloco-md);
+  }
+  body[data-variant="riso"] .doar-pix-hero {
+    box-shadow:
+      6px 6px 0 var(--cor-amarelo),
+      -4px -4px 0 var(--cor-vermelho);
+  }
+  .doar-pix-hero__head { padding: var(--space-6) var(--space-6) 0; }
+  .doar-pix-hero__eyebrow {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-vermelho);
+  }
+  .doar-pix-hero__title {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: var(--space-2) 0 0;
+  }
+  @media (min-width: 768px) { .doar-pix-hero__title { font-size: 4rem; } }
+  .doar-pix-hero__body {
+    display: grid;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    align-items: start;
+  }
+  @media (min-width: 720px) {
+    .doar-pix-hero__body {
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-8);
+      padding: var(--space-8);
+    }
+  }
+  .doar-pix-hero__qr {
+    aspect-ratio: 1;
+    max-width: 240px;
+    width: 100%;
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    background: var(--cor-papel);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    color: var(--cor-texto-fraco);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .doar-pix-hero__qr em { font-style: normal; opacity: 0.6; }
+  .doar-pix-hero__key {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+  .doar-pix-hero__code {
+    background: var(--cor-papel);
+    border: var(--borda-fina);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 1rem;
+    word-break: break-all;
+    line-height: 1.4;
+  }
+  .doar-pix-hero__copy { align-self: flex-start; }
+  .doar-pix-hero__note {
+    font-size: 0.95rem;
+    color: var(--cor-texto-fraco);
+    margin: var(--space-2) 0 0;
+    line-height: 1.5;
+  }
+
+  .doar-others { display: grid; gap: var(--space-6); }
+  @media (min-width: 768px) {
+    .doar-others { grid-template-columns: repeat(3, 1fr); }
+  }
+  .doar-other {
+    background: var(--cor-superficie);
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    box-shadow: var(--sombra-bloco-sm);
+    min-width: 0;
+  }
+  body[data-variant="riso"] .doar-other {
+    box-shadow:
+      3px 3px 0 var(--cor-amarelo),
+      -2px -2px 0 var(--cor-vermelho);
+  }
+  .doar-other__title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .doar-other__desc { font-size: 0.95rem; line-height: 1.55; margin: 0; flex: 1; }
+  .doar-other__cta { width: 100%; justify-content: center; margin-top: auto; }
+  .doar-other__cta[data-disabled] { opacity: 0.5; pointer-events: none; }
+  .doar-other__small { font-size: 0.85rem; color: var(--cor-texto-fraco); margin: 0; }
+
+  .doar-bank {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-2) var(--space-4);
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    min-width: 0;
+  }
+  .doar-bank dt {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cor-texto-fraco);
+  }
+  .doar-bank dd { margin: 0; word-break: break-word; }
+
+  .doar-livros {
+    margin-top: var(--space-16);
+    max-width: 720px;
+  }
+  .doar-livros__title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    margin: 0 0 var(--space-3);
+  }
+  .doar-livros p {
+    font-size: 1.05rem;
+    line-height: 1.55;
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,59 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Calendario from "../../../components/Calendario.astro";
+import ProximosEventos from "../../../components/ProximosEventos.astro";
+import UltimosArtigos from "../../../components/UltimosArtigos.astro";
+import { getEvents, expandOccurrences } from "../../../lib/events";
+import { getAllArtigos } from "../../../lib/content";
+
+const locale = "en" as const;
+const now = new Date();
+const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+const windowStart = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+const windowEnd = new Date(now.getFullYear(), now.getMonth() + 12, 0);
+
+const weekEnd = new Date(now);
+weekEnd.setDate(weekEnd.getDate() + 7);
+weekEnd.setHours(23, 59, 59, 999);
+
+const [events, allArtigos] = await Promise.all([
+  getEvents(),
+  getAllArtigos(),
+]);
+const occurrences = expandOccurrences(events, windowStart, windowEnd, locale);
+const upcoming = occurrences.filter((o) => o.start >= now);
+const thisWeek = upcoming.filter((o) => o.start <= weekEnd);
+---
+
+<Layout title="Activities — Livroteca Brincante do Pina" locale={locale}>
+  <section>
+    <div class="container">
+      <div class="section__label">This week</div>
+      <h2 class="section__title">What's happening in the next 7 days.</h2>
+      <div style="margin-top: var(--space-6); max-width: 720px;">
+        <ProximosEventos occurrences={thisWeek} locale={locale} limit={20} />
+      </div>
+    </div>
+  </section>
+
+  <section style="background: var(--cor-superficie); border-top: var(--borda-fina); border-bottom: var(--borda-fina);">
+    <div class="container">
+      <div class="section__label">Programme</div>
+      <h2 class="section__title">Calendar</h2>
+      <div class="calendario-wrap">
+        <Calendario month={monthStart} occurrences={occurrences} locale={locale} />
+        <ProximosEventos occurrences={upcoming} locale={locale} limit={6} />
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section__label">Archive</div>
+      <h2 class="section__title">All articles and events.</h2>
+      <div style="margin-top: var(--space-8);">
+        <UltimosArtigos artigos={allArtigos} locale={locale} />
+      </div>
+    </div>
+  </section>
+</Layout>

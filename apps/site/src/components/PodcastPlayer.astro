@@ -1,0 +1,137 @@
+---
+// Episódios placeholder — substituir por dados do Sanity (episodioPodcast)
+const episodes = [
+  { title: "Ep. 03 — A maré que sobe", num: "EP. 03", subtitle: "A maré que sobe — RioMar, Via Mangue e o que se perde", src: "" },
+  { title: "Ep. 02 — Capoeira na quadra", num: "EP. 02", subtitle: "Capoeira na quadra — conversas com os mestres", src: "" },
+  { title: "Ep. 01 — Carta de alforria", num: "EP. 01", subtitle: "Carta de alforria — Kcal conta a origem da Livroteca", src: "" },
+];
+---
+
+<div class="player" data-playing="false" id="player" transition:persist="player">
+  <button type="button" class="player__btn" aria-label="Ouvir A Voz da Lama" aria-expanded="false" data-toggle-player>
+    <dotlottie-wc class="bike-lottie" src="/lottie/speakers.lottie" autoplay loop aria-hidden="true"></dotlottie-wc>
+    <span class="player__label">A Voz da Lama</span>
+  </button>
+
+  <div class="player__panel" role="dialog" aria-label="Player A Voz da Lama">
+    <div class="player__head">
+      <div>
+        <div class="player__title">A Voz da Lama</div>
+        <div class="player__subtitle">podcast da Livroteca</div>
+      </div>
+      <button class="player__close" data-close-player aria-label="Fechar">×</button>
+    </div>
+
+    <div class="player__now">
+      <button class="player__play" data-play-pause aria-label="Tocar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path class="icon-play" d="M8 5v14l11-7z"/>
+          <path class="icon-pause" d="M6 5h4v14H6zM14 5h4v14h-4z" style="display:none"/>
+        </svg>
+      </button>
+      <div>
+        <div class="player__now-title" data-now-title>{episodes[0].title}</div>
+        <div class="player__now-meta" data-now-meta>Pausado · 0:00</div>
+      </div>
+    </div>
+
+    <ul class="player__list" role="listbox" aria-label="Episódios">
+      {episodes.map((ep, i) => (
+        <li>
+          <button type="button" data-episode={i} aria-current={i === 0 ? "true" : "false"}>
+            <span class="ep-num">{ep.num}</span>
+            <span class="ep-title">{ep.subtitle}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+
+    <audio data-audio preload="none"></audio>
+  </div>
+</div>
+
+<script is:inline define:vars={{ episodes }}>
+  const player = document.getElementById("player");
+  const btnToggle = player.querySelector("[data-toggle-player]");
+  const btnClose = player.querySelector("[data-close-player]");
+  const btnPlay = player.querySelector("[data-play-pause]");
+  const audio = player.querySelector("[data-audio]");
+  const nowTitle = player.querySelector("[data-now-title]");
+  const nowMeta = player.querySelector("[data-now-meta]");
+  const iconPlay = player.querySelector(".icon-play");
+  const iconPause = player.querySelector(".icon-pause");
+  const epButtons = player.querySelectorAll("[data-episode]");
+
+  let currentEp = 0;
+
+  function setPlaying(playing) {
+    player.dataset.playing = playing ? "true" : "false";
+    btnPlay.setAttribute("aria-label", playing ? "Pausar" : "Tocar");
+    iconPlay.style.display = playing ? "none" : "";
+    iconPause.style.display = playing ? "" : "none";
+  }
+
+  function fmt(s) {
+    if (!isFinite(s)) return "0:00";
+    const m = Math.floor(s / 60);
+    const r = Math.floor(s % 60).toString().padStart(2, "0");
+    return `${m}:${r}`;
+  }
+
+  function selectEpisode(i) {
+    currentEp = i;
+    const ep = episodes[i];
+    nowTitle.textContent = ep.title;
+    nowMeta.textContent = "Pausado · 0:00";
+    audio.src = ep.src || "";
+    epButtons.forEach((b, idx) => b.setAttribute("aria-current", idx === i ? "true" : "false"));
+    setPlaying(false);
+  }
+
+  function togglePanel(force) {
+    const open = force ?? !player.classList.contains("is-open");
+    player.classList.toggle("is-open", open);
+    btnToggle.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  btnToggle.addEventListener("click", () => togglePanel());
+  btnClose.addEventListener("click", () => togglePanel(false));
+
+  btnPlay.addEventListener("click", () => {
+    if (!audio.src) {
+      const next = player.dataset.playing !== "true";
+      setPlaying(next);
+      nowMeta.textContent = next ? "Tocando · demo" : "Pausado · 0:00";
+      return;
+    }
+    if (audio.paused) audio.play(); else audio.pause();
+  });
+
+  audio.addEventListener("play", () => setPlaying(true));
+  audio.addEventListener("pause", () => setPlaying(false));
+  audio.addEventListener("ended", () => {
+    const next = (currentEp + 1) % episodes.length;
+    selectEpisode(next);
+    if (episodes[next].src) audio.play();
+  });
+  audio.addEventListener("timeupdate", () => {
+    nowMeta.textContent = `Tocando · ${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
+  });
+
+  epButtons.forEach((b) =>
+    b.addEventListener("click", () => {
+      const i = parseInt(b.dataset.episode, 10);
+      selectEpisode(i);
+      if (audio.src) audio.play().catch(() => {});
+    })
+  );
+
+  document.addEventListener("click", (e) => {
+    if (!player.contains(e.target)) togglePanel(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") togglePanel(false);
+  });
+
+  selectEpisode(0);
+</script>

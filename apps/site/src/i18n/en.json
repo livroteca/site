@@ -1,0 +1,46 @@
+{
+  "locale_label": "EN",
+  "nav": {
+    "home": "Home",
+    "livroteca": "About",
+    "atividades": "Activities",
+    "doar": "Donate",
+    "voluntariar": "Volunteer",
+    "loja": "Shop"
+  },
+  "menu": "Menu",
+  "footer": {
+    "where_title": "Where to find us",
+    "where_local": "Bode community",
+    "where_city": "Pina · Recife/PE",
+    "where_email": "contato@livroteca",
+    "where_hours": "Mon to Sat · 2pm–6pm",
+    "redes": "Social",
+    "apoiar": "Support",
+    "doar": "→ Donate",
+    "voluntariar": "→ Volunteer",
+    "loja": "→ Shop",
+    "transparencia": "→ Transparency",
+    "made": "made in Bode"
+  },
+  "calendar": {
+    "weekdays_short": ["M", "T", "W", "T", "F", "S", "S"],
+    "prev": "Previous month",
+    "next": "Next month"
+  },
+  "events": {
+    "upcoming": "Upcoming events",
+    "see_all": "See all →",
+    "no_events": "No events scheduled.",
+    "no_articles": "No articles published yet.",
+    "recurring": "Recurring",
+    "event": "Event",
+    "news": "News",
+    "back": "← Back to Activities",
+    "event_when": "When",
+    "event_where": "Where",
+    "event_recurrence": "Recurrence",
+    "event_details": "Event details"
+  },
+  "translation_fallback": "This page hasn't been translated yet. Showing the Portuguese version."
+}

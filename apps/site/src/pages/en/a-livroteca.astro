@@ -1,0 +1,342 @@
+---
+import Layout from "../../layouts/Layout.astro";
+const locale = "en" as const;
+---
+
+<Layout
+  title="About — Livroteca Brincante do Pina"
+  description="Who we are: a community library and space for culture and popular education in the Bode community, Pina, Recife."
+  locale={locale}
+>
+  <section class="livroteca-hero" aria-label="Introduction">
+    <div class="livroteca-hero__bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="livroteca-hero__inner">
+        <span class="livroteca-hero__eyebrow">Bode · Pina · Recife</span>
+        <h1 class="livroteca-hero__title">Livroteca Brincante do Pina.</h1>
+        <p class="livroteca-hero__lede">
+          Community library, space for culture, popular education and gathering —
+          run by Bode residents, sustained by donations, volunteering and, now,
+          a shop of our own.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container livroteca-prose">
+      <div class="section__label">Who we are</div>
+      <h2 class="section__title">An initiative born from within the community.</h2>
+      <p>
+        Livroteca Brincante do Pina is a community-led, self-managed, non-profit
+        initiative based in the <strong>Bode</strong> community, in the
+        <strong>Pina</strong> neighbourhood, southern Recife. It functions as a
+        community library and as a space for culture, popular education and
+        gathering for children, teenagers, youth and families of the territory.
+      </p>
+      <p>
+        The Livroteca is not a public facility or an external NGO project: it
+        was born <strong>from within the community</strong>, is led by
+        residents, and is sustained by donations, volunteering and a shop of
+        its own.
+      </p>
+    </div>
+  </section>
+
+  <section style="background: var(--cor-superficie); border-top: var(--borda-fina); border-bottom: var(--borda-fina);">
+    <div class="container livroteca-prose">
+      <div class="section__label">History</div>
+      <h2 class="section__title">"Every book is a letter of liberation."</h2>
+      <p>
+        The Livroteca's story starts before the Livroteca itself. As a child,
+        <strong>Ricardo Gomes Ferraz — Kcal</strong> — grew up in Bode in
+        conditions of extreme precarity, emotionally supported by his
+        grandmother's care. He started working at six years old to help at
+        home.
+      </p>
+      <p>
+        The turning point was a chance encounter: inside a bag tossed on the
+        beach, Kcal found a copy of <em>The Hand and the Glove</em>, by
+        Machado de Assis. Reading that book worked as a <strong>summons</strong>:
+        there he understood literature as a path to his own voice and his own
+        place in the world.
+      </p>
+      <p>
+        From the age of <strong>twenty</strong>, driven by the desire to
+        "free his people from ignorance and from the lack of access to
+        culture", Kcal started <strong>collecting books</strong>. He turned his
+        own stilt house in Bode into a space for sharing, reading and play
+        with the neighbourhood's children — around <strong>1997</strong>, this
+        improvised collection was already recognised in the community as
+        Livroteca Brincante do Pina.
+      </p>
+      <p>
+        In almost three decades, the Livroteca has become a reference for
+        popular culture and community education in Recife. Today it holds a
+        collection of around <strong>8,000 books</strong>, around
+        <strong>120 registered children</strong>, a stable weekly programme and
+        a network of local partners. It has weathered floods, fires, removal
+        threats, the arrival of RioMar shopping mall, the building of Via
+        Mangue, real-estate pressure and the pandemic — and remained
+        <strong>inside</strong> the favela, never outside it.
+      </p>
+    </div>
+  </section>
+
+  <section class="citacao" style="padding:0;">
+    <div class="citacao__inner">
+      <p class="citacao__quote">"The favela isn't the media stereotype of crime — first and foremost, it's a nursery of artists."</p>
+      <div class="citacao__autor">— Kcal Gomes, founder</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container livroteca-prose">
+      <div class="section__label">Kcal — the founder</div>
+      <h2 class="section__title">Doctor of street philosophy.</h2>
+      <p>
+        <strong>Kcal</strong> is the name by which Ricardo Gomes Ferraz is
+        known: poet, musician, cultural activist, Bode resident and the
+        Livroteca's founder. He humorously describes himself as
+        "doctor of street philosophy" — trained, in his own words,
+        "at the international academy of letters, as of today".
+      </p>
+      <p>
+        His trajectory mixes music, poetry, writing, cultural mediation and
+        daily work with the community's children and youth. Kcal is at the
+        same time founder, leader and symbol of the Livroteca — but the
+        project, over the years, has become a collective network of
+        residents, volunteers, educators and partners who keep the space
+        running.
+      </p>
+      <h3 class="livroteca-sub">A political choice: stay inside the favela</h3>
+      <p>
+        Over the years, Kcal has received offers to move the library to
+        somewhere "safer", outside the favela. He has refused them all. For
+        him, the Livroteca only makes sense where the people need it — and
+        that means, literally, in Bode, in the middle of the community.
+      </p>
+    </div>
+  </section>
+
+  <section style="background: var(--cor-superficie); border-top: var(--borda-fina); border-bottom: var(--borda-fina);">
+    <div class="container livroteca-prose">
+      <div class="section__label">What we do</div>
+      <h2 class="section__title">Library, workshops, music, cinema, mangrove.</h2>
+      <p>
+        At the heart of the Livroteca is the <strong>community library</strong>:
+        lending, reading on site, reading mediation and storytelling. Around
+        it runs a continuous programme of workshops, courses and cultural
+        actions.
+      </p>
+      <ul class="livroteca-list">
+        <li><strong>Community library</strong> — lending, free reading, mediation, storytelling.</li>
+        <li><strong>Writing workshops</strong> led by Kcal — reading, poetic writing, building readers.</li>
+        <li><strong>Capoeira</strong> — regular classes for children and youth.</li>
+        <li><strong>Music</strong> — singing, instrumental practice, music education workshops.</li>
+        <li><strong>Circus</strong> — acrobatics, juggling, body expression.</li>
+        <li><strong>Drawing and visual arts</strong> — regular and one-off workshops.</li>
+        <li><strong>School support and literacy</strong> — for children of the community and for adult residents.</li>
+        <li><strong>Cine Bode</strong> — community cinema sessions on the courtyard.</li>
+        <li><strong>A Voz da Lama</strong> — podcast / community radio produced by the Livroteca.</li>
+        <li><strong>Environmental actions</strong> — boat rallies, cleanups and workshops around the mangrove and the Pina river.</li>
+        <li><strong>Joint actions</strong> with partner collectives — graffiti, vaccination campaigns, cultural projects.</li>
+      </ul>
+      <p style="margin-top: var(--space-6);">
+        Activities happen mainly in two spaces: the
+        <strong>library/headquarters</strong> proper and the
+        <strong>courtyard</strong>, which hosts capoeira, circus, music, cinema,
+        events and collective actions.
+      </p>
+      <p style="margin-top: var(--space-4);">
+        <a href="/en/as-atividades" class="btn btn--texto">→ See the full schedule</a>
+      </p>
+    </div>
+  </section>
+
+  <section id="bode">
+    <div class="container livroteca-prose">
+      <div class="section__label">Bode</div>
+      <h2 class="section__title">Where the Livroteca happens.</h2>
+      <p>
+        Bode is one of the communities of the Pina neighbourhood, in southern
+        Recife. It sits between the Pina river and the mangrove, and consists
+        of a part on <strong>solid ground</strong> — streets, alleys and brick
+        houses — and a part on <strong>stilt houses</strong>, wooden homes
+        raised on piles over the tide and the mangrove. It is officially
+        classified as a <strong>ZEIS</strong> (Special Zone of Social Interest),
+        an urban planning category that recognises the popular settlement and,
+        in theory, protects it from removal.
+      </p>
+      <p>
+        The community sits a few metres from the seafront, from the high-end
+        residential towers and the gated condominiums that today make up the
+        Pina landscape. Two major urban developments physically frame this
+        surroundings: the <strong>RioMar shopping mall</strong> (2012) and
+        <strong>Via Mangue</strong> (2014) — central pieces in the real-estate
+        pressure and removals that mark Bode's recent history.
+      </p>
+
+      <h3 class="livroteca-sub">A black, young, culturally rich community</h3>
+      <p>
+        Recent surveys count about <strong>25,000 residents</strong> in Bode.
+        The population is mostly black and young. Income comes from fishing,
+        informal work, local trade and precarious service jobs nearby. Pina
+        has long been known as a territory of Afro-Brazilian communities:
+        one of the branches of the Pernambuco <em>candomblé nagô</em> comes
+        from here, and the region remains an important pole of
+        <strong>maracatu, capoeira and popular culture</strong>.
+      </p>
+
+      <h3 class="livroteca-sub">Real-estate speculation and removals</h3>
+      <p>
+        Bode lives the typical contradiction of coastal favelas: a poor
+        community embedded in one of the most valued areas of the city.
+        Counting Via Mangue, the Pina urbanisation and the Pina River Linear
+        Park together, <strong>more than a thousand families</strong> have been
+        displaced from this stretch of Recife since 2012. The combination of
+        fires, "urbanisation" and new luxury developments is read by
+        residents, independent journalists and researchers as a
+        <strong>soft removal</strong>: families leave by exhaustion, low
+        compensation or temporary aid, and the land is absorbed into the
+        neighbourhood's rising value.
+      </p>
+
+      <h3 class="livroteca-sub">Why Bode matters to the Livroteca</h3>
+      <p>
+        The Livroteca exists <strong>inside</strong> this context, not next to
+        it. Every activity — library, capoeira, music, circus, drawing —
+        happens in a territory where children and youth are simultaneously
+        targets of state neglect and police violence; where families live
+        under constant removal pressure; where Afro-Brazilian and popular
+        culture is at once a source of identity and a target of erasure.
+        Showing Bode on this site isn't backdrop — it's part of the mission.
+      </p>
+    </div>
+  </section>
+
+  <section style="background: var(--cor-superficie); border-top: var(--borda-fina); border-bottom: var(--borda-fina);">
+    <div class="container livroteca-prose">
+      <div class="section__label">Community impact</div>
+      <h2 class="section__title">Almost 30 years in Bode.</h2>
+      <ul class="livroteca-list">
+        <li><strong>Access to reading</strong> for generations of children in Bode, in an area historically without a nearby public library.</li>
+        <li><strong>A safe space</strong> for children and youth in a territory marked by urban and police violence.</li>
+        <li><strong>Cultural training</strong> — capoeira, music, circus, audiovisual — in a community where regular schools offer little or none of this.</li>
+        <li><strong>Community mobilisation</strong>: during the COVID-19 pandemic, the Livroteca organised the distribution of food and hygiene items to more than 300 Bode families.</li>
+        <li><strong>External visibility</strong> — features in the national press and a feature documentary that took part in the Rome Film Festival.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="livroteca-prose">
+        <div class="section__label">How we sustain ourselves</div>
+        <h2 class="section__title">Three pillars, no stable funder.</h2>
+        <p>
+          The Livroteca <strong>receives no stable funding</strong> from
+          government, companies or external NGOs. Its sustainability rests on
+          three pillars — and each one has a dedicated page.
+        </p>
+      </div>
+      <div class="apoiar" style="margin-top: var(--space-8);">
+        <a href="/en/doar" class="cta cta--doar">
+          <div class="cta__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="cta__title">Donate</div>
+          <p class="cta__desc">Financial donations, books, materials. Recurring or one-off.</p>
+          <div class="cta__arrow">Donate now →</div>
+        </a>
+        <a href="/en/voluntariar" class="cta cta--voluntariar">
+          <div class="cta__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 11V7a4 4 0 1 0-8 0v4"/><path d="M3 11h18l-1.5 9.5a2 2 0 0 1-2 1.5h-11a2 2 0 0 1-2-1.5L3 11z"/></svg>
+          </div>
+          <div class="cta__title">Volunteer</div>
+          <p class="cta__desc">In person in Bode or remote — reading, workshops, communication, design, translation, tech.</p>
+          <div class="cta__arrow">Get involved →</div>
+        </a>
+        <a href="/en/loja" class="cta cta--loja">
+          <div class="cta__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <div class="cta__title">Shop</div>
+          <p class="cta__desc">Self-sustainability: Livroteca products tied to the project and the community.</p>
+          <div class="cta__arrow">Visit shop →</div>
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .livroteca-hero {
+    position: relative;
+    isolation: isolate;
+    color: var(--cor-papel);
+    overflow: hidden;
+    border-bottom: var(--borda-xilo);
+  }
+  .livroteca-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      linear-gradient(135deg, rgba(0,63,135,0.85), rgba(7,137,48,0.65)),
+      url("/images/quem_somos.png") center / cover no-repeat;
+  }
+  .livroteca-hero__inner {
+    padding: calc(var(--space-16) + 16px) 0 var(--space-12);
+    display: grid;
+    gap: var(--space-4);
+    max-width: 800px;
+  }
+  @media (min-width: 1024px) {
+    .livroteca-hero__inner {
+      padding: calc(var(--space-24) + 8px) 0 var(--space-16);
+    }
+  }
+  .livroteca-hero__eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cor-amarelo);
+  }
+  .livroteca-hero__title {
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+  @media (min-width: 768px) { .livroteca-hero__title { font-size: 56px; } }
+  @media (min-width: 1024px) { .livroteca-hero__title { font-size: 72px; } }
+  .livroteca-hero__lede {
+    font-size: 1.1rem;
+    max-width: 56ch;
+  }
+
+  .livroteca-prose { max-width: 760px; }
+  .livroteca-prose p {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    margin: 0 0 var(--space-4);
+  }
+  .livroteca-prose p:last-child { margin-bottom: 0; }
+  .livroteca-sub {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: var(--space-8) 0 var(--space-3);
+  }
+  .livroteca-list {
+    margin: var(--space-4) 0 0;
+    padding-left: var(--space-6);
+    display: grid;
+    gap: var(--space-2);
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+</style>

@@ -1,0 +1,43 @@
+---
+import { coverUrl, titleFor, excerptFor, fmtDate, type Artigo } from "../lib/content";
+import { useTranslations, type Locale } from "../lib/i18n";
+
+interface Props {
+  artigos: Artigo[];
+  locale: Locale;
+}
+
+const { artigos, locale } = Astro.props;
+const t = useTranslations(locale);
+const prefix = locale === "en" ? "/en" : "";
+---
+
+<div class="cards">
+  {artigos.length === 0 && (
+    <p style="color: var(--cor-texto-fraco); grid-column: 1 / -1;">
+      {t.events.no_articles}
+    </p>
+  )}
+  {artigos.map((a) => {
+    const cover = coverUrl(a.cover, 800);
+    const authors = a.authors?.map((au) => au.name).join(", ") ?? "";
+    const isEvent = a.type === "evento";
+    const badgeClass = isEvent ? "badge--pontual" : "badge--noticia";
+    const badgeLabel = isEvent ? t.events.event : t.events.news;
+    return (
+      <a href={`${prefix}/as-atividades/${a.slug}`} class="card">
+        {cover && (
+          <div class="card__media" style={`background-image: url('${cover}');`}></div>
+        )}
+        <div class="card__body">
+          <span class={`badge ${badgeClass}`}>{badgeLabel}</span>
+          <h3 class="card__title">{titleFor(a, locale)}</h3>
+          {excerptFor(a, locale) && <p class="card__excerpt">{excerptFor(a, locale)}</p>}
+          <div class="card__meta">
+            {fmtDate(a.date, locale)}{authors && ` · ${authors}`}
+          </div>
+        </div>
+      </a>
+    );
+  })}
+</div>

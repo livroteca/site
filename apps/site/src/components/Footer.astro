@@ -1,0 +1,46 @@
+---
+import { useTranslations, type Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+const prefix = locale === "en" ? "/en" : "";
+---
+
+<footer class="footer" transition:persist="footer">
+  <div class="container footer__inner">
+    <div class="footer__col">
+      <h3>{t.footer.where_title}</h3>
+      <ul>
+        <li>{t.footer.where_local}</li>
+        <li>{t.footer.where_city}</li>
+        <li><a href={`mailto:${t.footer.where_email}`}>{t.footer.where_email}</a></li>
+        <li>{t.footer.where_hours}</li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <h3>{t.footer.redes}</h3>
+      <ul>
+        <li><a href="https://www.instagram.com/livrotecabrincantedopina/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/LivrotecaBrincanteDoPina/" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://tunein.com/podcasts/Arts--Culture-Podcasts/Radio-de-Andada-A-Voz-da-Lama-l-Livroteca-Brincante-do-Pina-p2276168/" target="_blank" rel="noopener">A Voz da Lama</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <h3>{t.footer.apoiar}</h3>
+      <ul>
+        <li><a href={`${prefix}/doar`}>{t.footer.doar}</a></li>
+        <li><a href={`${prefix}/voluntariar`}>{t.footer.voluntariar}</a></li>
+        <li><a href={`${prefix}/loja`}>{t.footer.loja}</a></li>
+        <li><a href={`${prefix}/transparencia`}>{t.footer.transparencia}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    © {year} Livroteca Brincante do Pina · {t.footer.made}
+  </div>
+</footer>

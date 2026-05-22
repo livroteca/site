@@ -1,0 +1,47 @@
+---
+import { useTranslations, type Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const prefix = locale === "en" ? "/en" : "";
+const title = locale === "en" ? "How to help" : "Como ajudar";
+const lede = locale === "en" ? "Three ways to sustain the Livroteca." : "Três caminhos para sustentar a Livroteca.";
+const closeLabel = locale === "en" ? "Close" : "Fechar";
+---
+
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" id="modal-ajudar" transition:persist="modal">
+  <div class="modal__panel">
+    <button class="modal__close" data-close-modal aria-label={closeLabel}>×</button>
+    <h2 id="modal-title" class="modal__title">{title}</h2>
+    <p class="modal__lede">{lede}</p>
+    <div class="modal__grid">
+      <a href={`${prefix}/doar`} class="cta cta--doar"><div class="cta__title">{t.nav.doar}</div><div class="cta__arrow">→</div></a>
+      <a href={`${prefix}/voluntariar`} class="cta cta--voluntariar"><div class="cta__title">{t.nav.voluntariar}</div><div class="cta__arrow">→</div></a>
+      <a href={`${prefix}/loja`} class="cta cta--loja"><div class="cta__title">{t.nav.loja}</div><div class="cta__arrow">→</div></a>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    const modal = document.getElementById("modal-ajudar");
+    if (!modal) return;
+    const open = () => modal.classList.add("is-open");
+    const close = () => modal.classList.remove("is-open");
+
+    document.addEventListener("click", (e) => {
+      const t = e.target;
+      if (!(t instanceof Element)) return;
+      if (t.closest("[data-open-modal]")) open();
+      else if (t.closest("[data-close-modal]")) close();
+      else if (t === modal) close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+  })();
+</script>

@@ -1,0 +1,43 @@
+---
+import { monthShort, weekdayLong, fmtHora, type Occurrence } from "../lib/events";
+import { useTranslations, type Locale } from "../lib/i18n";
+
+interface Props {
+  occurrences: Occurrence[];
+  locale: Locale;
+  limit?: number;
+}
+
+const { occurrences, locale, limit = 4 } = Astro.props;
+const t = useTranslations(locale);
+const items = occurrences.slice(0, limit);
+const prefix = locale === "en" ? "/en" : "";
+---
+
+<div class="proximos">
+  <div class="proximos__head">
+    <div class="proximos__title">{t.events.upcoming}</div>
+    <a href={`${prefix}/as-atividades`} class="btn btn--texto">{t.events.see_all}</a>
+  </div>
+  <div class="proximos__list">
+    {items.length === 0 && (
+      <p style="color: var(--cor-texto-fraco);">{t.events.no_events}</p>
+    )}
+    {items.map((o) => (
+      <a href={`${prefix}/as-atividades/${o.slug}`} class="evento">
+        <div class="evento__data">
+          <span class="dia">{o.start.getDate()}</span>
+          <span class="mes">{monthShort(o.start, locale)}</span>
+        </div>
+        <div>
+          <span class={`badge ${o.recurring ? "badge--recorrente" : "badge--pontual"}`}>
+            {o.recurring ? t.events.recurring : t.events.event}
+          </span>
+          <div class="evento__title" style="margin-top:6px;">{o.title}</div>
+          <div class="evento__hora">{weekdayLong(o.start, locale)} · {fmtHora(o.start, locale)}</div>
+        </div>
+        <div aria-hidden="true" style="font-family:var(--font-display);">→</div>
+      </a>
+    ))}
+  </div>
+</div>
