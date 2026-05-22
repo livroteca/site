@@ -19,13 +19,18 @@ Il s'y déroule des actions en lien avec d'autres collectifs / collectivités (o
 L'association fonctionne via les dons et le volontariat et est en train d'essayer de s'auto financer en créant une boutique où sont vendus des produits de la livroteca.
 ## Description de la phase actuelle 
 
-Nous sommes actuellement à la fin de la planification du site principal.
-**Phase courante : planification terminée. Prochaine étape — validation Kcal + bootstrap Astro.**
+**Phase courante : itérations / pré-prod.** Site bootstrap fait, contenu en cours, pas encore déployé.
 
 ### TODO
 
-5. **Validation Kcal** — domaine (`.com.br` / `.org` / les deux), accès CMS (qui édite réellement), Doar v1 (PIX link vs Stripe/MP intégré), newsletter v1 ou v2.
-6. **Bootstrap Astro** — créer repo GitHub, scaffold Astro 5, porter `template/index.html` en composants (Header, Footer, PodcastPlayer, layout).
+- **Cloudflare Pages** — connecter `livroteca/site` à CF Pages, configurer env vars (`SANITY_PROJECT_ID`, etc.), domaines `livrotecabrincantedopina.org` + `.com.br` redirect, studio sur `studio.livrotecabrincantedopina.org`.
+- **Domaines** — Cloudflare Registrar `.org` + Registro.br `.com.br` (CPF/CNPJ requis).
+- **Webhook Sanity** — Settings → API → Webhooks → CF Pages deploy hook URL.
+- **Backups Sanity** — cron Worker `sanity dataset export` → R2.
+- **Form Voluntariar** — CF Pages Function + Resend → email Kcal.
+- **Doar — données réelles** — chave PIX, MP link, coordonnées bancaires, CNPJ (placeholder `[a-definir]` actuels).
+- **Contenu** — vrais articles/eventos, episodios podcast, documents transparência uploadés dans Sanity + R2.
+- **Loja** — site séparé, stack TBD.
 
 ### Done
 0. LIVRO.md — description de la Livroteca, histoire de Kcal, activités, modèle de financement.
@@ -34,6 +39,10 @@ Nous sommes actuellement à la fin de la planification du site principal.
 3. DESIGN.md — système de design (tokens couleurs Pernambuco, typo Anton+Inter+Caveat, espacement, composants).
    - Itéré via `template/index.html`. **Variante d'élévation tranchée : Riso (default) + Linha en switch optionnel.** Bloco et Papel éliminés.
 4. STACK.md — Astro 5 SSG + **Sanity** (CMS hébergé, auth email pour Kcal/volontaires sans GitHub) + Cloudflare Pages (site + studio) + R2 (MP3 podcast, PDFs transparência) + `rrule.js` pré-calculé au build + webhook Sanity → deploy hook + cron hebdo. i18n via champs localisés Sanity (édition pt/en côte à côte) + Astro i18n natif. CSS vanilla sur tokens DESIGN.md. **Monorepo** `apps/site` + `apps/studio` recommandé.
+5. **Bootstrap** — monorepo pnpm, Astro 6 (au lieu de 5), Sanity 3 Studio, scaffold complet (composants, pages, lib Sanity+events, i18n PT/EN, calendrier RRULE multi-mois, ClientRouter view transitions, fonts self-host via @fontsource). Repo `livroteca/site` public, commit initial pushé.
+6. **Sanity wiring** — projet `hxzxnh1c` (dataset `production`), schemas créés (artigo, pessoa, paginaInstitucional, episodioPodcast, documentoTransparencia, configSite + localizedString/Text/PortableText), test event créé et vérifié sur le site.
+7. **i18n complète** — strings PT/EN, mirror /en/* de toutes les pages, switcher fonctionnel avec `data-astro-reload` (header/footer persistés sinon strings stale), TranslationBanner pour artigos sans trad EN.
+8. **Contenu statique** — /a-livroteca (LIVRO+BODE intégrés), /doar (PIX hero + 3 cards MP/Bank/Intl, placeholders `[a-definir]`), /voluntariar (présentiel/remoto + email CTA), /transparencia (fetch Sanity), /loja stub.
 
 ## État courant — reprendre ici
 
@@ -69,7 +78,7 @@ Nous sommes actuellement à la fin de la planification du site principal.
 - **Page "O Bode"** : section de `/a-livroteca` (pas de page propre `/o-bode`).
 - **Loja** : dans le menu principal (en plus du footer + dialog Ajudar).
 - **Palette Pernambuco + typos** : validées telles qu'au template.
-- **Repo GitHub** : org `livrotecabrincante` à créer ; Hugo owner principal, Kcal owner secondaire (continuité projet, n'utilise pas GitHub au quotidien).
+- **Repo GitHub** : org **`livroteca`** créée ; repo **`livroteca/site`** (public). Hugo owner ; Kcal à inviter en owner pour continuité.
 - **Domaines** : **`livrotecabrincantedopina.org`** canonical (Cloudflare Registrar) **+ `livrotecabrincantedopina.com.br`** en redirect 301 (Registro.br, défense de marque côté Brésil).
 - **Studio hosting** : auto-hébergé sur **`studio.livrotecabrincantedopina.org`** (Cloudflare Pages).
 - **Doar v1** : page statique éditée dans Sanity — QR code PIX + clé PIX + bouton hosted Mercado Pago + bank info + email pour donations internationales. Zéro code. V2 envisagée post-launch si friction.
