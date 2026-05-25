@@ -1,0 +1,106 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="404 — Livroteca Brincante do Pina" noindex>
+  <section class="erro404">
+    <div class="container erro404__inner">
+      <div class="erro404__codigo" aria-hidden="true">404</div>
+
+      <div data-loc="pt" class="erro404__bloco">
+        <h1 class="erro404__titulo">Esta página se perdeu no Bode.</h1>
+        <p class="erro404__lede">
+          A gente revirou as estantes da Livroteca, mas não achou o que você
+          procura. Talvez o endereço esteja errado, ou a página foi movida.
+        </p>
+        <div class="erro404__acoes">
+          <a href="/" class="btn btn--primario">← Voltar para a Home</a>
+          <a href="/as-atividades" class="btn btn--texto">Ver as atividades →</a>
+        </div>
+        <p class="erro404__rodape">
+          Se você chegou aqui por um link, escreve pra gente em
+          <a href="mailto:contato@livrotecabrincantedopina.org">contato@livrotecabrincantedopina.org</a>
+          que a gente conserta.
+        </p>
+      </div>
+
+      <div data-loc="en" class="erro404__bloco" hidden>
+        <h1 class="erro404__titulo">This page got lost in Bode.</h1>
+        <p class="erro404__lede">
+          We turned the Livroteca shelves upside down but couldn't find what
+          you're looking for. The address might be wrong, or the page was moved.
+        </p>
+        <div class="erro404__acoes">
+          <a href="/en/" class="btn btn--primario">← Back to home</a>
+          <a href="/en/as-atividades" class="btn btn--texto">See activities →</a>
+        </div>
+        <p class="erro404__rodape">
+          If you got here from a link, drop us a line at
+          <a href="mailto:contato@livrotecabrincantedopina.org">contato@livrotecabrincantedopina.org</a>
+          so we can fix it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var p = location.pathname || "";
+      var isEn = p === "/en" || p === "/en/" || p.indexOf("/en/") === 0;
+      var pt = document.querySelector('[data-loc="pt"]');
+      var en = document.querySelector('[data-loc="en"]');
+      if (isEn && pt && en) {
+        pt.hidden = true;
+        en.hidden = false;
+        document.documentElement.lang = "en";
+        document.title = "404 — Livroteca Brincante do Pina";
+      }
+    })();
+  </script>
+</Layout>
+
+<style>
+  .erro404 {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    padding: var(--space-16) 0;
+  }
+  .erro404__inner {
+    text-align: center;
+    max-width: 640px;
+  }
+  .erro404__codigo {
+    font-family: var(--font-display, "Anton", sans-serif);
+    font-size: clamp(6rem, 18vw, 12rem);
+    line-height: 0.9;
+    color: var(--cor-vermelho, #c03e2d);
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-6);
+  }
+  .erro404__titulo {
+    font-family: var(--font-display, "Anton", sans-serif);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    margin: 0 0 var(--space-4);
+  }
+  .erro404__lede {
+    font-size: 1.125rem;
+    line-height: 1.55;
+    color: var(--cor-tinta-suave, #555);
+    margin: 0 auto var(--space-8);
+    max-width: 50ch;
+  }
+  .erro404__acoes {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-8);
+  }
+  .erro404__rodape {
+    font-size: 0.95rem;
+    color: var(--cor-tinta-suave, #666);
+    margin: 0 auto;
+    max-width: 52ch;
+  }
+</style>

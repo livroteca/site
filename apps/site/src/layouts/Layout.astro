@@ -14,16 +14,28 @@ import PodcastPlayer from "../components/PodcastPlayer.astro";
 import AjudarFab from "../components/AjudarFab.astro";
 import AjudarModal from "../components/AjudarModal.astro";
 import TranslationBanner from "../components/TranslationBanner.astro";
-import { getLocaleFromUrl, htmlLang, type Locale } from "../lib/i18n";
+import {
+  getLocaleFromUrl,
+  htmlLang,
+  localizePath,
+  type Locale,
+} from "../lib/i18n";
 
 interface Props {
   title?: string;
   description?: string;
   locale?: Locale;
   translationFallback?: boolean;
+  image?: string;
+  type?: "website" | "article";
+  publishedAt?: string;
+  noindex?: boolean;
 }
 
 const locale: Locale = Astro.props.locale ?? getLocaleFromUrl(Astro.url);
+
+const SITE_URL = "https://livrotecabrincantedopina.org";
+const DEFAULT_OG = "/images/passeio_barco.jpg";
 
 const defaultTitles: Record<Locale, string> = {
   "pt-BR": "Livroteca Brincante do Pina",
@@ -39,7 +51,52 @@ const {
   title = defaultTitles[locale],
   description = defaultDescriptions[locale],
   translationFallback = false,
+  image,
+  type = "website",
+  publishedAt,
+  noindex = false,
 } = Astro.props;
+
+const path = Astro.url.pathname;
+const canonical = new URL(path, SITE_URL).toString();
+const ptUrl = new URL(localizePath("pt-BR", path), SITE_URL).toString();
+const enUrl = new URL(localizePath("en", path), SITE_URL).toString();
+const ogImage = image
+  ? image.startsWith("http")
+    ? image
+    : new URL(image, SITE_URL).toString()
+  : new URL(DEFAULT_OG, SITE_URL).toString();
+const ogLocale = locale === "en" ? "en_US" : "pt_BR";
+const ogLocaleAlt = locale === "en" ? "pt_BR" : "en_US";
+
+const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
+const isHome = path === "/" || path === "/en/" || path === "/en";
+
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "NGO",
+  name: "Livroteca Brincante do Pina",
+  url: SITE_URL,
+  logo: new URL("/images/logolivro.png", SITE_URL).toString(),
+  description: defaultDescriptions["pt-BR"],
+  foundingDate: "1997",
+  founder: { "@type": "Person", name: "Kcal Gomes" },
+  location: {
+    "@type": "Place",
+    name: "Comunidade do Bode",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Comunidade do Bode, Pina",
+      addressLocality: "Recife",
+      addressRegion: "PE",
+      addressCountry: "BR",
+    },
+  },
+  sameAs: [
+    "https://www.instagram.com/livrotecabrincantedopina/",
+    "https://www.facebook.com/LivrotecaBrincanteDoPina/",
+  ],
+};
 ---
 
 <!doctype html>
@@ -49,8 +106,53 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+    <link rel="alternate" hreflang="pt-BR" href={ptUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={ptUrl} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Livroteca Brincante do Pina" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlt} />
+    {type === "article" && publishedAt && (
+      <meta property="article:published_time" content={publishedAt} />
+    )}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
     <link rel="icon" type="image/png" href="/images/logolivro.png" />
-    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module" is:inline></script>
+
+    {isHome && (
+      <script
+        type="application/ld+json"
+        is:inline
+        set:html={JSON.stringify(orgJsonLd)}
+      />
+    )}
+
+    <script
+      src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js"
+      type="module"
+      is:inline></script>
+
+    {cfAnalyticsToken && (
+      <script
+        defer
+        is:inline
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={`{"token":"${cfAnalyticsToken}"}`}></script>
+    )}
+
     <ClientRouter />
   </head>
   <body data-variant="riso" data-locale={locale}>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://livrotecabrincantedopina.org/sitemap-index.xml

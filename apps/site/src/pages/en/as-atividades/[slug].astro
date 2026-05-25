@@ -1,7 +1,7 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import ArtigoDetail from "../../../components/ArtigoDetail.astro";
-import { getAllArtigos, getArtigoBySlug, titleFor, excerptFor, hasTranslation } from "../../../lib/content";
+import { getAllArtigos, getArtigoBySlug, titleFor, excerptFor, hasTranslation, coverUrl } from "../../../lib/content";
 
 export async function getStaticPaths() {
   const artigos = await getAllArtigos();
@@ -18,6 +18,7 @@ if (!artigo) {
 const showFallback = !hasTranslation(artigo, "en");
 const title = titleFor(artigo, locale);
 const excerpt = excerptFor(artigo, locale);
+const ogImage = coverUrl(artigo.cover, 1200) ?? undefined;
 ---
 
 <Layout
@@ -25,6 +26,9 @@ const excerpt = excerptFor(artigo, locale);
   description={excerpt || undefined}
   locale={locale}
   translationFallback={showFallback}
+  image={ogImage}
+  type="article"
+  publishedAt={artigo.date}
 >
   <ArtigoDetail artigo={artigo} locale={locale} />
 </Layout>

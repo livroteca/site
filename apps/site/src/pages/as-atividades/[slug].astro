@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ArtigoDetail from "../../components/ArtigoDetail.astro";
-import { getAllArtigos, getArtigoBySlug, titleFor, excerptFor, hasTranslation } from "../../lib/content";
+import { getAllArtigos, getArtigoBySlug, titleFor, excerptFor, coverUrl } from "../../lib/content";
 
 export async function getStaticPaths() {
   const artigos = await getAllArtigos();
@@ -17,8 +17,16 @@ if (!artigo) {
 
 const title = titleFor(artigo, locale);
 const excerpt = excerptFor(artigo, locale);
+const ogImage = coverUrl(artigo.cover, 1200) ?? undefined;
 ---
 
-<Layout title={`${title} — Livroteca`} description={excerpt || undefined} locale={locale}>
+<Layout
+  title={`${title} — Livroteca`}
+  description={excerpt || undefined}
+  locale={locale}
+  image={ogImage}
+  type="article"
+  publishedAt={artigo.date}
+>
   <ArtigoDetail artigo={artigo} locale={locale} />
 </Layout>
