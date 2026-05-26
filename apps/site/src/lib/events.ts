@@ -54,7 +54,12 @@ const EVENTS_QUERY = `*[_type == "artigo" && type == "evento" && defined(event.s
 }`;
 
 export async function getEvents(): Promise<SanityEvent[]> {
-  return sanity.fetch(EVENTS_QUERY);
+  const events = await sanity.fetch<SanityEvent[]>(EVENTS_QUERY);
+  if (import.meta.env.DEV) {
+    const { MOCK_EVENTS } = await import("./events.mock");
+    return [...events, ...MOCK_EVENTS];
+  }
+  return events;
 }
 
 export function expandOccurrences(
