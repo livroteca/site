@@ -42,5 +42,28 @@
     "event_recurrence": "Recorrência",
     "event_details": "Detalhes do evento"
   },
-  "translation_fallback": "Esta página ainda não foi traduzida. Mostrando a versão em português."
+  "translation_fallback": "Esta página ainda não foi traduzida. Mostrando a versão em português.",
+  "voluntariar_form": {
+    "title": "Inscreva-se",
+    "subtitle": "Conte para a gente o que você quer propor. Respondemos por email.",
+    "name_label": "Nome",
+    "email_label": "Email",
+    "type_label": "Tipo de voluntariado",
+    "type_presencial": "Presencial no Bode",
+    "type_remoto": "Remoto",
+    "type_ambos": "Os dois",
+    "skills_label": "Habilidades / áreas de interesse",
+    "skills_placeholder": "Ex.: mediação de leitura, design gráfico, tradução, oficina de cinema…",
+    "message_label": "Disponibilidade, motivação, mensagem",
+    "message_optional": "(opcional)",
+    "message_placeholder": "Ex.: posso vir aos sábados de tarde; conheço a Livroteca por…",
+    "required": "obrigatório",
+    "submit": "Enviar inscrição",
+    "submitting": "Enviando…",
+    "success_title": "Recebido!",
+    "success_desc": "Obrigado por se candidatar. A gente entra em contato pelo email informado.",
+    "error_validation": "Por favor preencha os campos obrigatórios.",
+    "error_turnstile": "Verificação anti-spam falhou. Recarregue a página e tente de novo.",
+    "error_generic": "Algo deu errado. Tente de novo ou escreva para contato@livrotecabrincantedopina.org."
+  }
 }

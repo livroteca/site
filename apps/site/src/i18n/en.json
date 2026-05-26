@@ -42,5 +42,28 @@
     "event_recurrence": "Recurrence",
     "event_details": "Event details"
   },
-  "translation_fallback": "This page hasn't been translated yet. Showing the Portuguese version."
+  "translation_fallback": "This page hasn't been translated yet. Showing the Portuguese version.",
+  "voluntariar_form": {
+    "title": "Sign up",
+    "subtitle": "Tell us what you'd like to propose. We reply by email.",
+    "name_label": "Name",
+    "email_label": "Email",
+    "type_label": "Type of volunteering",
+    "type_presencial": "In person in Bode",
+    "type_remoto": "Remote",
+    "type_ambos": "Both",
+    "skills_label": "Skills / areas of interest",
+    "skills_placeholder": "E.g.: reading mediation, graphic design, translation, film workshop…",
+    "message_label": "Availability, motivation, message",
+    "message_optional": "(optional)",
+    "message_placeholder": "E.g.: I can come Saturdays afternoon; I learned about the Livroteca through…",
+    "required": "required",
+    "submit": "Send application",
+    "submitting": "Sending…",
+    "success_title": "Got it!",
+    "success_desc": "Thanks for applying. We'll get in touch via the email you provided.",
+    "error_validation": "Please fill in the required fields.",
+    "error_turnstile": "Anti-spam check failed. Reload the page and try again.",
+    "error_generic": "Something went wrong. Try again or email us at contato@livrotecabrincantedopina.org."
+  }
 }

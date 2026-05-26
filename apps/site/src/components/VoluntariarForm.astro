@@ -1,0 +1,372 @@
+---
+import { useTranslations, type Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale).voluntariar_form;
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<div class="vol-form-wrap">
+  <div class="vol-form__head">
+    <h3 class="vol-form__title">{t.title}</h3>
+    <p class="vol-form__subtitle">{t.subtitle}</p>
+  </div>
+
+  <form class="vol-form" novalidate data-locale={locale}>
+    <div class="vol-form__row">
+      <label class="vol-form__field">
+        <span class="vol-form__label">
+          {t.name_label} <span class="vol-form__required" aria-label={t.required}>*</span>
+        </span>
+        <input type="text" name="name" required autocomplete="name" maxlength="200" />
+      </label>
+
+      <label class="vol-form__field">
+        <span class="vol-form__label">
+          {t.email_label} <span class="vol-form__required" aria-label={t.required}>*</span>
+        </span>
+        <input type="email" name="email" required autocomplete="email" maxlength="200" />
+      </label>
+    </div>
+
+    <fieldset class="vol-form__field vol-form__fieldset">
+      <legend class="vol-form__label">
+        {t.type_label} <span class="vol-form__required" aria-label={t.required}>*</span>
+      </legend>
+      <div class="vol-form__radios">
+        <label class="vol-form__radio">
+          <input type="radio" name="type" value="presencial" required />
+          <span>{t.type_presencial}</span>
+        </label>
+        <label class="vol-form__radio">
+          <input type="radio" name="type" value="remoto" required />
+          <span>{t.type_remoto}</span>
+        </label>
+        <label class="vol-form__radio">
+          <input type="radio" name="type" value="ambos" required />
+          <span>{t.type_ambos}</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <label class="vol-form__field">
+      <span class="vol-form__label">
+        {t.skills_label} <span class="vol-form__required" aria-label={t.required}>*</span>
+      </span>
+      <textarea
+        name="skills"
+        required
+        rows="3"
+        maxlength="5000"
+        placeholder={t.skills_placeholder}></textarea>
+    </label>
+
+    <label class="vol-form__field">
+      <span class="vol-form__label">
+        {t.message_label} <span class="vol-form__optional">{t.message_optional}</span>
+      </span>
+      <textarea
+        name="message"
+        rows="4"
+        maxlength="5000"
+        placeholder={t.message_placeholder}></textarea>
+    </label>
+
+    <div class="vol-form__hp" aria-hidden="true">
+      <label>
+        Leave this empty
+        <input type="text" name="hp" tabindex="-1" autocomplete="off" />
+      </label>
+    </div>
+
+    {turnstileKey && (
+      <div
+        class="cf-turnstile vol-form__turnstile"
+        data-sitekey={turnstileKey}
+        data-theme="light"
+        data-size="flexible"></div>
+    )}
+
+    <div class="vol-form__footer">
+      <button type="submit" class="btn btn--primario vol-form__submit">
+        <span data-submit-label>{t.submit}</span>
+      </button>
+      <p
+        class="vol-form__status"
+        role="status"
+        aria-live="polite"
+        data-status
+        hidden></p>
+    </div>
+  </form>
+
+  <div class="vol-form__success" role="status" aria-live="polite" hidden data-success>
+    <h3 class="vol-form__success-title">{t.success_title}</h3>
+    <p class="vol-form__success-desc">{t.success_desc}</p>
+  </div>
+</div>
+
+{turnstileKey && (
+  <script
+    is:inline
+    async
+    defer
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+)}
+
+<script
+  is:inline
+  define:vars={{
+    SUBMIT_LABEL: t.submit,
+    SUBMITTING_LABEL: t.submitting,
+    ERR_VALIDATION: t.error_validation,
+    ERR_TURNSTILE: t.error_turnstile,
+    ERR_GENERIC: t.error_generic,
+    HAS_TURNSTILE: Boolean(turnstileKey),
+  }}>
+  (function () {
+    const forms = document.querySelectorAll(".vol-form");
+    forms.forEach((form) => {
+      const submitBtn = form.querySelector("button[type=submit]");
+      const submitLabel = form.querySelector("[data-submit-label]");
+      const status = form.querySelector("[data-status]");
+      const successEl = form.parentElement.querySelector("[data-success]");
+
+      function showStatus(msg) {
+        status.textContent = msg;
+        status.hidden = false;
+      }
+      function hideStatus() {
+        status.textContent = "";
+        status.hidden = true;
+      }
+      function setSubmitting(on) {
+        submitBtn.disabled = on;
+        submitLabel.textContent = on ? SUBMITTING_LABEL : SUBMIT_LABEL;
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hideStatus();
+
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          showStatus(ERR_VALIDATION);
+          return;
+        }
+
+        const fd = new FormData(form);
+        const data = {
+          name: String(fd.get("name") || ""),
+          email: String(fd.get("email") || ""),
+          type: String(fd.get("type") || ""),
+          skills: String(fd.get("skills") || ""),
+          message: String(fd.get("message") || ""),
+          hp: String(fd.get("hp") || ""),
+          token: String(fd.get("cf-turnstile-response") || ""),
+          locale: form.dataset.locale || "pt-BR",
+        };
+
+        if (HAS_TURNSTILE && !data.token) {
+          showStatus(ERR_TURNSTILE);
+          return;
+        }
+
+        setSubmitting(true);
+        try {
+          const res = await fetch("/api/voluntariar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+          const out = await res.json().catch(() => ({}));
+          if (res.ok && out.ok) {
+            form.hidden = true;
+            if (successEl) successEl.hidden = false;
+            return;
+          }
+          if (out.error === "turnstile") {
+            showStatus(ERR_TURNSTILE);
+          } else if (out.error === "validation") {
+            showStatus(ERR_VALIDATION);
+          } else {
+            showStatus(ERR_GENERIC);
+          }
+          if (window.turnstile && typeof window.turnstile.reset === "function") {
+            window.turnstile.reset();
+          }
+        } catch {
+          showStatus(ERR_GENERIC);
+        } finally {
+          setSubmitting(false);
+        }
+      });
+    });
+  })();
+</script>
+
+<style>
+  .vol-form-wrap {
+    margin-top: var(--space-12);
+    padding: var(--space-8);
+    background: var(--cor-amarelo);
+    border: var(--borda-xilo);
+    border-radius: var(--radius-sm);
+  }
+  body[data-variant="riso"] .vol-form-wrap {
+    box-shadow:
+      6px 6px 0 var(--cor-vermelho),
+      -4px -4px 0 var(--cor-verde);
+  }
+  .vol-form__head {
+    text-align: center;
+    margin-bottom: var(--space-6);
+  }
+  .vol-form__title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin: 0 0 var(--space-2);
+  }
+  .vol-form__subtitle {
+    font-size: 1rem;
+    max-width: 52ch;
+    margin: 0 auto;
+    color: var(--cor-tinta);
+  }
+  .vol-form {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .vol-form__row {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 640px) {
+    .vol-form__row { grid-template-columns: 1fr 1fr; }
+  }
+  .vol-form__field {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .vol-form__fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .vol-form__label {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--cor-tinta);
+  }
+  .vol-form__required {
+    color: var(--cor-vermelho);
+    font-weight: bold;
+  }
+  .vol-form__optional {
+    font-family: var(--font-corpo, "Inter", sans-serif);
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--cor-tinta-suave, #666);
+    margin-left: var(--space-2);
+  }
+  .vol-form input[type="text"],
+  .vol-form input[type="email"],
+  .vol-form textarea {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 2px solid var(--cor-tinta, #1a1a1a);
+    border-radius: var(--radius-sm);
+    background: var(--cor-papel, #faf7f0);
+    font: inherit;
+    color: inherit;
+    box-sizing: border-box;
+  }
+  .vol-form input:focus-visible,
+  .vol-form textarea:focus-visible {
+    outline: 3px solid var(--cor-vermelho);
+    outline-offset: 2px;
+  }
+  .vol-form textarea {
+    resize: vertical;
+    min-height: 88px;
+  }
+  .vol-form__radios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .vol-form__radio {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: var(--cor-papel, #faf7f0);
+    border: 2px solid var(--cor-tinta, #1a1a1a);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+  .vol-form__radio:has(input:checked) {
+    background: var(--cor-tinta, #1a1a1a);
+    color: var(--cor-papel, #faf7f0);
+  }
+  .vol-form__radio input {
+    accent-color: var(--cor-vermelho);
+  }
+  .vol-form__hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .vol-form__turnstile {
+    min-height: 65px;
+  }
+  .vol-form__footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: stretch;
+    margin-top: var(--space-2);
+  }
+  .vol-form__submit {
+    align-self: start;
+    font-size: 1.05rem;
+  }
+  .vol-form__submit[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .vol-form__status {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--cor-vermelho);
+    font-weight: 500;
+  }
+  .vol-form__success {
+    text-align: center;
+    padding: var(--space-6) 0;
+  }
+  .vol-form__success-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin: 0 0 var(--space-3);
+    color: var(--cor-verde);
+  }
+  .vol-form__success-desc {
+    font-size: 1.05rem;
+    max-width: 48ch;
+    margin: 0 auto;
+  }
+</style>

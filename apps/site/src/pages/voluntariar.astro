@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import VoluntariarForm from "../components/VoluntariarForm.astro";
 
 const tracks = [
   {
@@ -55,19 +56,7 @@ const tracks = [
         ))}
       </div>
 
-      <div class="vol-cta">
-        <h3 class="vol-cta__title">Tem disponibilidade?</h3>
-        <p class="vol-cta__desc">
-          Escreva para a gente contando o que você quer propor — frequência,
-          disponibilidade, habilidades, motivação. A gente responde.
-        </p>
-        <a href="mailto:contato@livroteca?subject=Voluntariado" class="btn btn--primario vol-cta__btn">
-          contato@livroteca →
-        </a>
-        <p class="vol-cta__small">
-          <em>Em breve: formulário direto nesta página.</em>
-        </p>
-      </div>
+      <VoluntariarForm locale="pt-BR" />
     </div>
   </section>
 </Layout>
@@ -114,32 +103,5 @@ const tracks = [
     gap: var(--space-2);
     font-size: 0.95rem;
     line-height: 1.5;
-  }
-
-  .vol-cta {
-    margin-top: var(--space-16);
-    padding: var(--space-8);
-    background: var(--cor-amarelo);
-    border: var(--borda-xilo);
-    border-radius: var(--radius-sm);
-    text-align: center;
-  }
-  .vol-cta__title {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    text-transform: uppercase;
-    margin: 0 0 var(--space-3);
-  }
-  .vol-cta__desc {
-    font-size: 1.05rem;
-    line-height: 1.55;
-    max-width: 48ch;
-    margin: 0 auto var(--space-6);
-  }
-  .vol-cta__btn { font-size: 1.1rem; }
-  .vol-cta__small {
-    margin-top: var(--space-4);
-    font-size: 0.85rem;
-    color: var(--cor-texto-fraco);
   }
 </style>
