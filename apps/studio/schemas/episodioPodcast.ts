@@ -32,7 +32,15 @@ export default defineType({
       name: "audioUrl",
       title: "URL do áudio (R2)",
       type: "url",
-      validation: (r) => r.required(),
+      description:
+        "MP3 hospedado no R2 — playback diretamente no site. Se vazio, o site abre o externalUrl em nova aba.",
+    }),
+    defineField({
+      name: "externalUrl",
+      title: "URL externa (TuneIn, Spotify…)",
+      type: "url",
+      description:
+        "Fallback se o áudio ainda não está no R2. Ex.: link TuneIn do episódio.",
     }),
     defineField({
       name: "durationSeconds",

@@ -1,5 +1,6 @@
 ---
 import { useTranslations, type Locale } from "../lib/i18n";
+import { getSiteConfig } from "../lib/content";
 
 interface Props {
   locale: Locale;
@@ -9,6 +10,18 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 const year = new Date().getFullYear();
 const prefix = locale === "en" ? "/en" : "";
+
+const config = await getSiteConfig();
+
+const local = config?.address?.local ?? t.footer.where_local;
+const city = config?.address?.city ?? t.footer.where_city;
+const hours = config?.address?.hours ?? t.footer.where_hours;
+const email = config?.contactEmail ?? t.footer.where_email;
+
+const instagram = config?.social?.instagram ?? "https://www.instagram.com/livrotecabrincantedopina/";
+const facebook = config?.social?.facebook ?? "https://www.facebook.com/LivrotecaBrincanteDoPina/";
+const tunein = config?.social?.tunein ?? "https://tunein.com/podcasts/Arts--Culture-Podcasts/Radio-de-Andada-A-Voz-da-Lama-l-Livroteca-Brincante-do-Pina-p2276168/";
+const youtube = config?.social?.youtube;
 ---
 
 <footer class="footer" transition:persist="footer">
@@ -16,18 +29,19 @@ const prefix = locale === "en" ? "/en" : "";
     <div class="footer__col">
       <h3>{t.footer.where_title}</h3>
       <ul>
-        <li>{t.footer.where_local}</li>
-        <li>{t.footer.where_city}</li>
-        <li><a href={`mailto:${t.footer.where_email}`}>{t.footer.where_email}</a></li>
-        <li>{t.footer.where_hours}</li>
+        <li>{local}</li>
+        <li>{city}</li>
+        <li><a href={`mailto:${email}`}>{email}</a></li>
+        <li>{hours}</li>
       </ul>
     </div>
     <div class="footer__col">
       <h3>{t.footer.redes}</h3>
       <ul>
-        <li><a href="https://www.instagram.com/livrotecabrincantedopina/" target="_blank" rel="noopener">Instagram</a></li>
-        <li><a href="https://www.facebook.com/LivrotecaBrincanteDoPina/" target="_blank" rel="noopener">Facebook</a></li>
-        <li><a href="https://tunein.com/podcasts/Arts--Culture-Podcasts/Radio-de-Andada-A-Voz-da-Lama-l-Livroteca-Brincante-do-Pina-p2276168/" target="_blank" rel="noopener">A Voz da Lama</a></li>
+        <li><a href={instagram} target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href={facebook} target="_blank" rel="noopener">Facebook</a></li>
+        {youtube && <li><a href={youtube} target="_blank" rel="noopener">YouTube</a></li>}
+        <li><a href={tunein} target="_blank" rel="noopener">A Voz da Lama</a></li>
       </ul>
     </div>
     <div class="footer__col">

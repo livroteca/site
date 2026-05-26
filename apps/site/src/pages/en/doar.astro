@@ -1,7 +1,14 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { getSiteConfig, pixQrUrl } from "../../lib/content";
 
-const pixKey = "[pix-key-tbd]";
+const config = await getSiteConfig();
+const pixKey = config?.pixKey ?? "[pix-key-tbd]";
+const pixHasKey = Boolean(config?.pixKey);
+const qrUrl = pixQrUrl(config?.pixQrImage, 480);
+const mpUrl = config?.mercadoPagoUrl;
+const bank = config?.bankInfo;
+const intlEmail = config?.contactEmail ?? "contato@livrotecabrincantedopina.org";
 const locale = "en" as const;
 ---
 
@@ -29,13 +36,21 @@ const locale = "en" as const;
           <h3 class="doar-pix-hero__title">PIX</h3>
         </div>
         <div class="doar-pix-hero__body">
-          <div class="doar-pix-hero__qr" aria-hidden="true">
-            <span>PIX QR code<br/><em>[tbd]</em></span>
+          <div class="doar-pix-hero__qr" aria-hidden={qrUrl ? undefined : "true"}>
+            {qrUrl ? (
+              <img src={qrUrl} alt="PIX QR code" loading="lazy" />
+            ) : (
+              <span>PIX QR code<br/><em>[tbd]</em></span>
+            )}
           </div>
           <div class="doar-pix-hero__key">
             <span class="doar-eyebrow">PIX key</span>
             <code class="doar-pix-hero__code">{pixKey}</code>
-            <button type="button" class="btn btn--secundario doar-pix-hero__copy" data-copy={pixKey} disabled>
+            <button
+              type="button"
+              class="btn btn--secundario doar-pix-hero__copy"
+              data-copy={pixKey}
+              disabled={!pixHasKey}>
               Copy key
             </button>
             <p class="doar-pix-hero__note">
@@ -50,21 +65,29 @@ const locale = "en" as const;
           <span class="doar-eyebrow">Card or boleto</span>
           <h3 class="doar-other__title">Mercado Pago</h3>
           <p class="doar-other__desc">One-off or recurring donations with credit card or boleto.</p>
-          <a href="#" class="btn btn--primario doar-other__cta" data-disabled>
-            Donate via Mercado Pago →
-          </a>
-          <p class="doar-other__small"><em>Link to be configured.</em></p>
+          {mpUrl ? (
+            <a href={mpUrl} target="_blank" rel="noopener" class="btn btn--primario doar-other__cta">
+              Donate via Mercado Pago →
+            </a>
+          ) : (
+            <>
+              <a href="#" class="btn btn--primario doar-other__cta" data-disabled>
+                Donate via Mercado Pago →
+              </a>
+              <p class="doar-other__small"><em>Link to be configured.</em></p>
+            </>
+          )}
         </article>
 
         <article class="doar-other">
           <span class="doar-eyebrow">Bank transfer</span>
           <h3 class="doar-other__title">Livroteca account</h3>
           <dl class="doar-bank">
-            <dt>Bank</dt><dd>[tbd]</dd>
-            <dt>Branch</dt><dd>[tbd]</dd>
-            <dt>Account</dt><dd>[tbd]</dd>
-            <dt>Beneficiary</dt><dd>Livroteca Brincante do Pina</dd>
-            <dt>CNPJ</dt><dd>[tbd]</dd>
+            <dt>Bank</dt><dd>{bank?.banco ?? "[tbd]"}</dd>
+            <dt>Branch</dt><dd>{bank?.agencia ?? "[tbd]"}</dd>
+            <dt>Account</dt><dd>{bank?.conta ?? "[tbd]"}</dd>
+            <dt>Beneficiary</dt><dd>{bank?.favorecido ?? "Livroteca Brincante do Pina"}</dd>
+            <dt>CNPJ</dt><dd>{bank?.cnpj ?? "[tbd]"}</dd>
           </dl>
         </article>
 
@@ -75,8 +98,8 @@ const locale = "en" as const;
             No PIX in your country? Email us — we'll arrange the best route
             (international transfer or a platform we've used before).
           </p>
-          <a href="mailto:contato@livroteca?subject=International%20donation" class="btn btn--vermelho doar-other__cta">
-            contato@livroteca →
+          <a href={`mailto:${intlEmail}?subject=International%20donation`} class="btn btn--vermelho doar-other__cta">
+            {intlEmail} →
           </a>
         </article>
       </div>
@@ -93,6 +116,25 @@ const locale = "en" as const;
     </div>
   </section>
 </Layout>
+
+<script is:inline>
+  document.querySelectorAll(".doar-pix-hero__copy[data-copy]").forEach((btn) => {
+    if (btn.disabled) return;
+    const original = btn.textContent;
+    btn.addEventListener("click", async () => {
+      const key = btn.getAttribute("data-copy") || "";
+      if (!key || key.startsWith("[")) return;
+      try {
+        await navigator.clipboard.writeText(key);
+        btn.textContent = "✓ Copied";
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      } catch {
+        btn.textContent = "Error";
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      }
+    });
+  });
+</script>
 
 <style>
   .doar-eyebrow {
@@ -164,6 +206,12 @@ const locale = "en" as const;
     line-height: 1.4;
   }
   .doar-pix-hero__qr em { font-style: normal; opacity: 0.6; }
+  .doar-pix-hero__qr img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
   .doar-pix-hero__key {
     display: flex;
     flex-direction: column;

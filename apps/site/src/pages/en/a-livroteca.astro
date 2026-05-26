@@ -1,6 +1,12 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { getPessoaBySlug, pessoaPhotoUrl, pessoaRoleFor, pessoaBioFor } from "../../lib/content";
+
 const locale = "en" as const;
+const kcal = await getPessoaBySlug("kcal");
+const kcalPhoto = pessoaPhotoUrl(kcal, 480);
+const kcalRole = kcal ? pessoaRoleFor(kcal, locale) : "";
+const kcalBio = kcal ? pessoaBioFor(kcal, locale) : "";
 ---
 
 <Layout
@@ -94,6 +100,20 @@ const locale = "en" as const;
     <div class="container livroteca-prose">
       <div class="section__label">Kcal — the founder</div>
       <h2 class="section__title">Doctor of street philosophy.</h2>
+
+      {kcal && (
+        <aside class="pessoa-card">
+          {kcalPhoto && (
+            <img src={kcalPhoto} alt={kcal.name} class="pessoa-card__photo" loading="lazy" />
+          )}
+          <div class="pessoa-card__body">
+            <div class="pessoa-card__name">{kcal.name}</div>
+            {kcalRole && <div class="pessoa-card__role">{kcalRole}</div>}
+            {kcalBio && <p class="pessoa-card__bio">{kcalBio}</p>}
+          </div>
+        </aside>
+      )}
+
       <p>
         <strong>Kcal</strong> is the name by which Ricardo Gomes Ferraz is
         known: poet, musician, cultural activist, Bode resident and the
@@ -338,5 +358,53 @@ const locale = "en" as const;
     gap: var(--space-2);
     font-size: 1.05rem;
     line-height: 1.55;
+  }
+
+  .pessoa-card {
+    display: grid;
+    gap: var(--space-4);
+    align-items: start;
+    margin: var(--space-6) 0;
+    padding: var(--space-5);
+    background: var(--cor-superficie);
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+  }
+  body[data-variant="riso"] .pessoa-card {
+    box-shadow:
+      4px 4px 0 var(--cor-amarelo),
+      -3px -3px 0 var(--cor-vermelho);
+  }
+  @media (min-width: 600px) {
+    .pessoa-card { grid-template-columns: 140px 1fr; gap: var(--space-5); }
+  }
+  .pessoa-card__photo {
+    width: 100%;
+    max-width: 140px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: var(--borda-fina);
+    border-radius: var(--radius-sm);
+    display: block;
+  }
+  .pessoa-card__body { min-width: 0; }
+  .pessoa-card__name {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .pessoa-card__role {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-vermelho);
+    margin-top: var(--space-1);
+  }
+  .pessoa-card__bio {
+    font-size: 0.98rem;
+    line-height: 1.55;
+    margin: var(--space-3) 0 0;
   }
 </style>

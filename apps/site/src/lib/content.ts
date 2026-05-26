@@ -68,6 +68,112 @@ export async function getAllSlugs(): Promise<string[]> {
   return sanity.fetch(`*[_type == "artigo" && defined(slug.current)].slug.current`);
 }
 
+// ──────────────────────────────────────────────────────────────
+// configSite (singleton)
+// ──────────────────────────────────────────────────────────────
+
+export interface SiteConfig {
+  siteTitle?: LocalizedString;
+  siteDescription?: { pt?: string; en?: string };
+  contactEmail?: string;
+  address?: {
+    local?: string;
+    city?: string;
+    hours?: string;
+    mapUrl?: string;
+  };
+  pixKey?: string;
+  pixQrImage?: SanityImageRef;
+  mercadoPagoUrl?: string;
+  bankInfo?: {
+    banco?: string;
+    agencia?: string;
+    conta?: string;
+    favorecido?: string;
+    cnpj?: string;
+  };
+  social?: {
+    instagram?: string;
+    facebook?: string;
+    youtube?: string;
+    tunein?: string;
+  };
+}
+
+export async function getSiteConfig(): Promise<SiteConfig | null> {
+  return sanity.fetch(`*[_type == "configSite"][0]{
+    siteTitle, siteDescription, contactEmail,
+    address, pixKey, pixQrImage, mercadoPagoUrl, bankInfo, social
+  }`);
+}
+
+export function pixQrUrl(qr: SanityImageRef | undefined, width = 480): string | null {
+  if (!qr?.asset?._ref) return null;
+  return urlFor(qr).width(width).fit("max").auto("format").url();
+}
+
+// ──────────────────────────────────────────────────────────────
+// Pessoa
+// ──────────────────────────────────────────────────────────────
+
+export interface Pessoa {
+  _id: string;
+  name: string;
+  slug?: string;
+  role?: LocalizedString;
+  bio?: { pt?: string; en?: string };
+  photo?: SanityImageRef;
+}
+
+export async function getPessoaBySlug(slug: string): Promise<Pessoa | null> {
+  return sanity.fetch(
+    `*[_type == "pessoa" && slug.current == $slug][0]{
+      _id, name, "slug": slug.current, role, bio, photo
+    }`,
+    { slug }
+  );
+}
+
+export function pessoaPhotoUrl(p: Pessoa | null | undefined, width = 480): string | null {
+  if (!p?.photo?.asset?._ref) return null;
+  return urlFor(p.photo).width(width).fit("crop").auto("format").url();
+}
+
+export function pessoaRoleFor(p: Pessoa, locale: Locale = "pt-BR"): string {
+  const s = shortLocale(locale);
+  return p.role?.[s] ?? p.role?.pt ?? "";
+}
+
+export function pessoaBioFor(p: Pessoa, locale: Locale = "pt-BR"): string {
+  const s = shortLocale(locale);
+  return p.bio?.[s] ?? p.bio?.pt ?? "";
+}
+
+// ──────────────────────────────────────────────────────────────
+// Episódio podcast
+// ──────────────────────────────────────────────────────────────
+
+export interface PodcastEpisode {
+  _id: string;
+  title: LocalizedString;
+  number?: number;
+  publishedAt: string;
+  audioUrl?: string;
+  externalUrl?: string;
+  durationSeconds?: number;
+  description?: { pt?: string; en?: string };
+}
+
+export async function getPodcastEpisodes(): Promise<PodcastEpisode[]> {
+  return sanity.fetch(`*[_type == "episodioPodcast"] | order(number desc, publishedAt desc){
+    _id, title, number, publishedAt, audioUrl, externalUrl, durationSeconds, description
+  }`);
+}
+
+// ──────────────────────────────────────────────────────────────
+// Documentos transparência
+// ──────────────────────────────────────────────────────────────
+
 export interface DocumentoTransparencia {
   _id: string;
   title: LocalizedString;

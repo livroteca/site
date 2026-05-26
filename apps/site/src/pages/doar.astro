@@ -1,7 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { getSiteConfig, pixQrUrl } from "../lib/content";
 
-const pixKey = "[chave-pix-a-definir]";
+const config = await getSiteConfig();
+const pixKey = config?.pixKey ?? "[chave-pix-a-definir]";
+const pixHasKey = Boolean(config?.pixKey);
+const qrUrl = pixQrUrl(config?.pixQrImage, 480);
+const mpUrl = config?.mercadoPagoUrl;
+const bank = config?.bankInfo;
+const intlEmail = config?.contactEmail ?? "contato@livrotecabrincantedopina.org";
 ---
 
 <Layout
@@ -27,13 +34,21 @@ const pixKey = "[chave-pix-a-definir]";
           <h3 class="doar-pix-hero__title">PIX</h3>
         </div>
         <div class="doar-pix-hero__body">
-          <div class="doar-pix-hero__qr" aria-hidden="true">
-            <span>QR code PIX<br/><em>[a definir]</em></span>
+          <div class="doar-pix-hero__qr" aria-hidden={qrUrl ? undefined : "true"}>
+            {qrUrl ? (
+              <img src={qrUrl} alt="QR code PIX" loading="lazy" />
+            ) : (
+              <span>QR code PIX<br/><em>[a definir]</em></span>
+            )}
           </div>
           <div class="doar-pix-hero__key">
             <span class="doar-eyebrow">Chave PIX</span>
             <code class="doar-pix-hero__code">{pixKey}</code>
-            <button type="button" class="btn btn--secundario doar-pix-hero__copy" data-copy={pixKey} disabled>
+            <button
+              type="button"
+              class="btn btn--secundario doar-pix-hero__copy"
+              data-copy={pixKey}
+              disabled={!pixHasKey}>
               Copiar chave
             </button>
             <p class="doar-pix-hero__note">
@@ -49,21 +64,29 @@ const pixKey = "[chave-pix-a-definir]";
           <span class="doar-eyebrow">Cartão ou boleto</span>
           <h3 class="doar-other__title">Mercado Pago</h3>
           <p class="doar-other__desc">Doação avulsa ou recorrente, com cartão de crédito ou boleto.</p>
-          <a href="#" class="btn btn--primario doar-other__cta" data-disabled>
-            Doar via Mercado Pago →
-          </a>
-          <p class="doar-other__small"><em>Link a configurar.</em></p>
+          {mpUrl ? (
+            <a href={mpUrl} target="_blank" rel="noopener" class="btn btn--primario doar-other__cta">
+              Doar via Mercado Pago →
+            </a>
+          ) : (
+            <>
+              <a href="#" class="btn btn--primario doar-other__cta" data-disabled>
+                Doar via Mercado Pago →
+              </a>
+              <p class="doar-other__small"><em>Link a configurar.</em></p>
+            </>
+          )}
         </article>
 
         <article class="doar-other">
           <span class="doar-eyebrow">Transferência bancária</span>
           <h3 class="doar-other__title">Conta da Livroteca</h3>
           <dl class="doar-bank">
-            <dt>Banco</dt><dd>[a definir]</dd>
-            <dt>Agência</dt><dd>[a definir]</dd>
-            <dt>Conta</dt><dd>[a definir]</dd>
-            <dt>Favorecido</dt><dd>Livroteca Brincante do Pina</dd>
-            <dt>CNPJ</dt><dd>[a definir]</dd>
+            <dt>Banco</dt><dd>{bank?.banco ?? "[a definir]"}</dd>
+            <dt>Agência</dt><dd>{bank?.agencia ?? "[a definir]"}</dd>
+            <dt>Conta</dt><dd>{bank?.conta ?? "[a definir]"}</dd>
+            <dt>Favorecido</dt><dd>{bank?.favorecido ?? "Livroteca Brincante do Pina"}</dd>
+            <dt>CNPJ</dt><dd>{bank?.cnpj ?? "[a definir]"}</dd>
           </dl>
         </article>
 
@@ -74,8 +97,8 @@ const pixKey = "[chave-pix-a-definir]";
             No PIX in your country? Email us — we'll arrange the best route
             (international transfer or a platform we've used before).
           </p>
-          <a href="mailto:contato@livroteca?subject=Doação%20internacional" class="btn btn--vermelho doar-other__cta">
-            contato@livroteca →
+          <a href={`mailto:${intlEmail}?subject=Doação%20internacional`} class="btn btn--vermelho doar-other__cta">
+            {intlEmail} →
           </a>
         </article>
       </div>
@@ -92,6 +115,25 @@ const pixKey = "[chave-pix-a-definir]";
     </div>
   </section>
 </Layout>
+
+<script is:inline>
+  document.querySelectorAll(".doar-pix-hero__copy[data-copy]").forEach((btn) => {
+    if (btn.disabled) return;
+    const original = btn.textContent;
+    btn.addEventListener("click", async () => {
+      const key = btn.getAttribute("data-copy") || "";
+      if (!key || key.startsWith("[")) return;
+      try {
+        await navigator.clipboard.writeText(key);
+        btn.textContent = "✓ Copiada";
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      } catch {
+        btn.textContent = "Erro";
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      }
+    });
+  });
+</script>
 
 <style>
   .doar-eyebrow {
@@ -166,6 +208,12 @@ const pixKey = "[chave-pix-a-definir]";
     line-height: 1.4;
   }
   .doar-pix-hero__qr em { font-style: normal; opacity: 0.6; }
+  .doar-pix-hero__qr img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
   .doar-pix-hero__key {
     display: flex;
     flex-direction: column;

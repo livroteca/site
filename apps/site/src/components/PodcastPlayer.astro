@@ -1,29 +1,64 @@
 ---
-// Episódios placeholder — substituir por dados do Sanity (episodioPodcast)
-const episodes = [
-  { title: "Ep. 03 — A maré que sobe", num: "EP. 03", subtitle: "A maré que sobe — RioMar, Via Mangue e o que se perde", src: "" },
-  { title: "Ep. 02 — Capoeira na quadra", num: "EP. 02", subtitle: "Capoeira na quadra — conversas com os mestres", src: "" },
-  { title: "Ep. 01 — Carta de alforria", num: "EP. 01", subtitle: "Carta de alforria — Kcal conta a origem da Livroteca", src: "" },
-];
+import { getPodcastEpisodes, titleFor } from "../lib/content";
+import { useTranslations, type Locale } from "../lib/i18n";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = "pt-BR" } = Astro.props;
+const t = useTranslations(locale);
+const pt = t.podcast;
+
+const SHOW_URL =
+  "https://tunein.com/podcasts/Arts--Culture-Podcasts/Radio-de-Andada-A-Voz-da-Lama-l-Livroteca-Brincante-do-Pina-p2276168/";
+
+const sanityEpisodes = await getPodcastEpisodes();
+
+type ClientEpisode = {
+  num: string;
+  title: string;
+  subtitle: string;
+  audioUrl: string;
+  externalUrl: string;
+};
+
+const episodes: ClientEpisode[] = sanityEpisodes.length
+  ? sanityEpisodes.map((ep) => ({
+      num: ep.number != null ? `EP. ${String(ep.number).padStart(2, "0")}` : "EP",
+      title: titleFor(ep, locale),
+      subtitle: titleFor(ep, locale),
+      audioUrl: ep.audioUrl ?? "",
+      externalUrl: ep.externalUrl ?? "",
+    }))
+  : [
+      {
+        num: "—",
+        title: pt.fallback_title,
+        subtitle: pt.fallback_subtitle,
+        audioUrl: "",
+        externalUrl: SHOW_URL,
+      },
+    ];
 ---
 
 <div class="player" data-playing="false" id="player" transition:persist="player">
-  <button type="button" class="player__btn" aria-label="Ouvir A Voz da Lama" aria-expanded="false" data-toggle-player>
-    <dotlottie-wc class="bike-lottie" src="/lottie/speakers.lottie" autoplay loop aria-hidden="true"></dotlottie-wc>
-    <span class="player__label">A Voz da Lama</span>
+  <button type="button" class="player__btn" aria-label={pt.open_label} aria-expanded="false" data-toggle-player>
+    <dotlottie-wc class="bike-lottie" src="/lottie/speakers.lottie" loop aria-hidden="true"></dotlottie-wc>
+    <span class="player__label">{pt.title}</span>
   </button>
 
-  <div class="player__panel" role="dialog" aria-label="Player A Voz da Lama">
+  <div class="player__panel" role="dialog" aria-label={pt.dialog_label}>
     <div class="player__head">
       <div>
-        <div class="player__title">A Voz da Lama</div>
-        <div class="player__subtitle">podcast da Livroteca</div>
+        <div class="player__title">{pt.title}</div>
+        <div class="player__subtitle">{pt.subtitle}</div>
       </div>
-      <button class="player__close" data-close-player aria-label="Fechar">×</button>
+      <button class="player__close" data-close-player aria-label={pt.close}>×</button>
     </div>
 
     <div class="player__now">
-      <button class="player__play" data-play-pause aria-label="Tocar">
+      <button class="player__play" data-play-pause aria-label={pt.play}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path class="icon-play" d="M8 5v14l11-7z"/>
           <path class="icon-pause" d="M6 5h4v14H6zM14 5h4v14h-4z" style="display:none"/>
@@ -31,16 +66,19 @@ const episodes = [
       </button>
       <div>
         <div class="player__now-title" data-now-title>{episodes[0].title}</div>
-        <div class="player__now-meta" data-now-meta>Pausado · 0:00</div>
+        <div class="player__now-meta" data-now-meta>{pt.paused} · 0:00</div>
       </div>
     </div>
 
-    <ul class="player__list" role="listbox" aria-label="Episódios">
+    <ul class="player__list" role="listbox" aria-label={pt.episodes_label}>
       {episodes.map((ep, i) => (
         <li>
           <button type="button" data-episode={i} aria-current={i === 0 ? "true" : "false"}>
             <span class="ep-num">{ep.num}</span>
             <span class="ep-title">{ep.subtitle}</span>
+            {!ep.audioUrl && ep.externalUrl && (
+              <span class="ep-ext" aria-hidden="true">↗</span>
+            )}
           </button>
         </li>
       ))}
@@ -50,7 +88,15 @@ const episodes = [
   </div>
 </div>
 
-<script is:inline define:vars={{ episodes }}>
+<script
+  is:inline
+  define:vars={{
+    episodes,
+    LBL_PLAY: pt.play,
+    LBL_PAUSE: pt.pause,
+    LBL_PLAYING: pt.playing,
+    LBL_PAUSED: pt.paused,
+  }}>
   const player = document.getElementById("player");
   const btnToggle = player.querySelector("[data-toggle-player]");
   const btnClose = player.querySelector("[data-close-player]");
@@ -61,14 +107,27 @@ const episodes = [
   const iconPlay = player.querySelector(".icon-play");
   const iconPause = player.querySelector(".icon-pause");
   const epButtons = player.querySelectorAll("[data-episode]");
+  const lottie = player.querySelector("dotlottie-wc");
 
   let currentEp = 0;
 
+  function lottiePlay() { try { lottie?.play?.(); } catch {} }
+  function lottiePause() { try { lottie?.pause?.(); } catch {} }
+
+  // Initial state: lottie paused
+  if (window.customElements && customElements.whenDefined) {
+    customElements.whenDefined("dotlottie-wc").then(() => {
+      // small defer to ensure instance is ready
+      setTimeout(lottiePause, 50);
+    });
+  }
+
   function setPlaying(playing) {
     player.dataset.playing = playing ? "true" : "false";
-    btnPlay.setAttribute("aria-label", playing ? "Pausar" : "Tocar");
+    btnPlay.setAttribute("aria-label", playing ? LBL_PAUSE : LBL_PLAY);
     iconPlay.style.display = playing ? "none" : "";
     iconPause.style.display = playing ? "" : "none";
+    if (playing) lottiePlay(); else lottiePause();
   }
 
   function fmt(s) {
@@ -82,8 +141,9 @@ const episodes = [
     currentEp = i;
     const ep = episodes[i];
     nowTitle.textContent = ep.title;
-    nowMeta.textContent = "Pausado · 0:00";
-    audio.src = ep.src || "";
+    nowMeta.textContent = `${LBL_PAUSED} · 0:00`;
+    audio.pause();
+    audio.src = ep.audioUrl || "";
     epButtons.forEach((b, idx) => b.setAttribute("aria-current", idx === i ? "true" : "false"));
     setPlaying(false);
   }
@@ -98,10 +158,9 @@ const episodes = [
   btnClose.addEventListener("click", () => togglePanel(false));
 
   btnPlay.addEventListener("click", () => {
-    if (!audio.src) {
-      const next = player.dataset.playing !== "true";
-      setPlaying(next);
-      nowMeta.textContent = next ? "Tocando · demo" : "Pausado · 0:00";
+    const ep = episodes[currentEp];
+    if (!ep.audioUrl) {
+      if (ep.externalUrl) window.open(ep.externalUrl, "_blank", "noopener");
       return;
     }
     if (audio.paused) audio.play(); else audio.pause();
@@ -110,19 +169,25 @@ const episodes = [
   audio.addEventListener("play", () => setPlaying(true));
   audio.addEventListener("pause", () => setPlaying(false));
   audio.addEventListener("ended", () => {
+    setPlaying(false);
     const next = (currentEp + 1) % episodes.length;
     selectEpisode(next);
-    if (episodes[next].src) audio.play();
+    if (episodes[next].audioUrl) audio.play().catch(() => {});
   });
   audio.addEventListener("timeupdate", () => {
-    nowMeta.textContent = `Tocando · ${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
+    nowMeta.textContent = `${LBL_PLAYING} · ${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
   });
 
   epButtons.forEach((b) =>
     b.addEventListener("click", () => {
       const i = parseInt(b.dataset.episode, 10);
+      const ep = episodes[i];
+      if (!ep.audioUrl && ep.externalUrl) {
+        window.open(ep.externalUrl, "_blank", "noopener");
+        return;
+      }
       selectEpisode(i);
-      if (audio.src) audio.play().catch(() => {});
+      if (ep.audioUrl) audio.play().catch(() => {});
     })
   );
 
@@ -135,3 +200,12 @@ const episodes = [
 
   selectEpisode(0);
 </script>
+
+<style>
+  .ep-ext {
+    margin-left: auto;
+    opacity: 0.6;
+    font-size: 0.8rem;
+  }
+  .player__list button { align-items: center; }
+</style>

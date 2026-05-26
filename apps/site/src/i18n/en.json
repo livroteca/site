@@ -43,6 +43,20 @@
     "event_details": "Event details"
   },
   "translation_fallback": "This page hasn't been translated yet. Showing the Portuguese version.",
+  "podcast": {
+    "title": "A Voz da Lama",
+    "subtitle": "Livroteca's podcast",
+    "open_label": "Listen to A Voz da Lama",
+    "dialog_label": "A Voz da Lama player",
+    "close": "Close",
+    "play": "Play",
+    "pause": "Pause",
+    "playing": "Playing",
+    "paused": "Paused",
+    "episodes_label": "Episodes",
+    "fallback_title": "A Voz da Lama on TuneIn",
+    "fallback_subtitle": "Listen to the episodes on TuneIn"
+  },
   "voluntariar_form": {
     "title": "Sign up",
     "subtitle": "Tell us what you'd like to propose. We reply by email.",

@@ -43,6 +43,20 @@
     "event_details": "Detalhes do evento"
   },
   "translation_fallback": "Esta página ainda não foi traduzida. Mostrando a versão em português.",
+  "podcast": {
+    "title": "A Voz da Lama",
+    "subtitle": "podcast da Livroteca",
+    "open_label": "Ouvir A Voz da Lama",
+    "dialog_label": "Player A Voz da Lama",
+    "close": "Fechar",
+    "play": "Tocar",
+    "pause": "Pausar",
+    "playing": "Tocando",
+    "paused": "Pausado",
+    "episodes_label": "Episódios",
+    "fallback_title": "A Voz da Lama no TuneIn",
+    "fallback_subtitle": "Escute os episódios no TuneIn"
+  },
   "voluntariar_form": {
     "title": "Inscreva-se",
     "subtitle": "Conte para a gente o que você quer propor. Respondemos por email.",
