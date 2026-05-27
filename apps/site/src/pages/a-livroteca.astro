@@ -1,11 +1,28 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { getPessoaBySlug, pessoaPhotoUrl, pessoaRoleFor, pessoaBioFor } from "../lib/content";
+import {
+  getPessoaBySlug,
+  pessoaPhotoUrl,
+  pessoaRoleFor,
+  pessoaBioFor,
+  getPaginaByKey,
+  paginaEyebrowFor,
+  paginaTitleFor,
+  paginaLedeFor,
+} from "../lib/content";
 
-const kcal = await getPessoaBySlug("kcal");
+const locale = "pt-BR" as const;
+const [kcal, pagina] = await Promise.all([
+  getPessoaBySlug("kcal"),
+  getPaginaByKey("a-livroteca"),
+]);
 const kcalPhoto = pessoaPhotoUrl(kcal, 480);
-const kcalRole = kcal ? pessoaRoleFor(kcal, "pt-BR") : "";
-const kcalBio = kcal ? pessoaBioFor(kcal, "pt-BR") : "";
+const kcalRole = kcal ? pessoaRoleFor(kcal, locale) : "";
+const kcalBio = kcal ? pessoaBioFor(kcal, locale) : "";
+
+const eyebrow = paginaEyebrowFor(pagina, locale) ?? "Bode · Pina · Recife";
+const heroTitle = paginaTitleFor(pagina, locale) ?? "A Livroteca Brincante do Pina.";
+const heroLede = paginaLedeFor(pagina, locale) ?? "Biblioteca comunitária, espaço de cultura, educação popular e convivência — conduzido por moradores do Bode, sustentado por doações, voluntariado e, agora, uma loja própria.";
 ---
 
 <Layout
@@ -16,13 +33,9 @@ const kcalBio = kcal ? pessoaBioFor(kcal, "pt-BR") : "";
     <div class="livroteca-hero__bg" aria-hidden="true"></div>
     <div class="container">
       <div class="livroteca-hero__inner">
-        <span class="livroteca-hero__eyebrow">Bode · Pina · Recife</span>
-        <h1 class="livroteca-hero__title">A Livroteca Brincante do Pina.</h1>
-        <p class="livroteca-hero__lede">
-          Biblioteca comunitária, espaço de cultura, educação popular e convivência —
-          conduzido por moradores do Bode, sustentado por doações, voluntariado e,
-          agora, uma loja própria.
-        </p>
+        <span class="livroteca-hero__eyebrow">{eyebrow}</span>
+        <h1 class="livroteca-hero__title">{heroTitle}</h1>
+        <p class="livroteca-hero__lede">{heroLede}</p>
       </div>
     </div>
   </section>

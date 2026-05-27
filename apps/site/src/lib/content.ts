@@ -113,6 +113,56 @@ export function pixQrUrl(qr: SanityImageRef | undefined, width = 480): string | 
 }
 
 // ──────────────────────────────────────────────────────────────
+// paginaInstitucional — overrides hero of static pages
+// ──────────────────────────────────────────────────────────────
+
+export type PaginaKey = "home" | "a-livroteca" | "doar" | "voluntariar" | "loja";
+
+export interface PaginaInstitucional {
+  _id: string;
+  key: PaginaKey;
+  eyebrow?: LocalizedString;
+  title?: LocalizedString;
+  lede?: { pt?: string; en?: string };
+  body?: { pt?: any[]; en?: any[] };
+}
+
+export async function getPaginaByKey(key: PaginaKey): Promise<PaginaInstitucional | null> {
+  return sanity.fetch(
+    `*[_type == "paginaInstitucional" && key == $key][0]{
+      _id, key, eyebrow, title, lede, body
+    }`,
+    { key }
+  );
+}
+
+export function paginaEyebrowFor(p: PaginaInstitucional | null | undefined, locale: Locale): string | null {
+  if (!p?.eyebrow) return null;
+  const s = shortLocale(locale);
+  return p.eyebrow[s] ?? p.eyebrow.pt ?? null;
+}
+
+export function paginaTitleFor(p: PaginaInstitucional | null | undefined, locale: Locale): string | null {
+  if (!p?.title) return null;
+  const s = shortLocale(locale);
+  return p.title[s] ?? p.title.pt ?? null;
+}
+
+export function paginaLedeFor(p: PaginaInstitucional | null | undefined, locale: Locale): string | null {
+  if (!p?.lede) return null;
+  const s = shortLocale(locale);
+  return p.lede[s] ?? p.lede.pt ?? null;
+}
+
+export function paginaBodyHtmlFor(p: PaginaInstitucional | null | undefined, locale: Locale): string | null {
+  if (!p?.body) return null;
+  const s = shortLocale(locale);
+  const blocks = p.body[s] ?? p.body.pt;
+  if (!blocks) return null;
+  return portableTextToHtml(blocks);
+}
+
+// ──────────────────────────────────────────────────────────────
 // Pessoa
 // ──────────────────────────────────────────────────────────────
 

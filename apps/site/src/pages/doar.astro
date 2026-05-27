@@ -1,14 +1,29 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { getSiteConfig, pixQrUrl } from "../lib/content";
+import {
+  getSiteConfig,
+  pixQrUrl,
+  getPaginaByKey,
+  paginaEyebrowFor,
+  paginaTitleFor,
+  paginaLedeFor,
+} from "../lib/content";
 
-const config = await getSiteConfig();
+const locale = "pt-BR" as const;
+const [config, pagina] = await Promise.all([
+  getSiteConfig(),
+  getPaginaByKey("doar"),
+]);
 const pixKey = config?.pixKey ?? "[chave-pix-a-definir]";
 const pixHasKey = Boolean(config?.pixKey);
 const qrUrl = pixQrUrl(config?.pixQrImage, 480);
 const mpUrl = config?.mercadoPagoUrl;
 const bank = config?.bankInfo;
 const intlEmail = config?.contactEmail ?? "contato@livrotecabrincantedopina.org";
+
+const eyebrow = paginaEyebrowFor(pagina, locale) ?? "Doar";
+const title = paginaTitleFor(pagina, locale) ?? "Sua doação sustenta a Livroteca.";
+const lede = paginaLedeFor(pagina, locale) ?? "A Livroteca não recebe financiamento estável de governo, empresa ou ONG. Todo recurso recebido entra direto no funcionamento do espaço: aluguel, manutenção, materiais, acervo, alimentação para as crianças, oficinas e ações.";
 ---
 
 <Layout
@@ -18,14 +33,9 @@ const intlEmail = config?.contactEmail ?? "contato@livrotecabrincantedopina.org"
   <section>
     <div class="container">
       <div style="max-width: 760px;">
-        <div class="section__label">Doar</div>
-        <h2 class="section__title">Sua doação sustenta a Livroteca.</h2>
-        <p style="margin-top: var(--space-4); font-size: 1.1rem; line-height: 1.55;">
-          A Livroteca não recebe financiamento estável de governo, empresa ou
-          ONG. Todo recurso recebido entra direto no funcionamento do espaço:
-          aluguel, manutenção, materiais, acervo, alimentação para as crianças,
-          oficinas e ações.
-        </p>
+        <div class="section__label">{eyebrow}</div>
+        <h2 class="section__title">{title}</h2>
+        <p style="margin-top: var(--space-4); font-size: 1.1rem; line-height: 1.55;">{lede}</p>
       </div>
 
       <div class="doar-pix-hero" style="margin-top: var(--space-12);">

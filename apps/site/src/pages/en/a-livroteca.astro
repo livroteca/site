@@ -1,12 +1,28 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { getPessoaBySlug, pessoaPhotoUrl, pessoaRoleFor, pessoaBioFor } from "../../lib/content";
+import {
+  getPessoaBySlug,
+  pessoaPhotoUrl,
+  pessoaRoleFor,
+  pessoaBioFor,
+  getPaginaByKey,
+  paginaEyebrowFor,
+  paginaTitleFor,
+  paginaLedeFor,
+} from "../../lib/content";
 
 const locale = "en" as const;
-const kcal = await getPessoaBySlug("kcal");
+const [kcal, pagina] = await Promise.all([
+  getPessoaBySlug("kcal"),
+  getPaginaByKey("a-livroteca"),
+]);
 const kcalPhoto = pessoaPhotoUrl(kcal, 480);
 const kcalRole = kcal ? pessoaRoleFor(kcal, locale) : "";
 const kcalBio = kcal ? pessoaBioFor(kcal, locale) : "";
+
+const eyebrow = paginaEyebrowFor(pagina, locale) ?? "Bode · Pina · Recife";
+const heroTitle = paginaTitleFor(pagina, locale) ?? "Livroteca Brincante do Pina.";
+const heroLede = paginaLedeFor(pagina, locale) ?? "Community library, space of culture, popular education and conviviality — run by Bode residents, sustained by donations, volunteering and, now, our own shop.";
 ---
 
 <Layout
@@ -18,13 +34,9 @@ const kcalBio = kcal ? pessoaBioFor(kcal, locale) : "";
     <div class="livroteca-hero__bg" aria-hidden="true"></div>
     <div class="container">
       <div class="livroteca-hero__inner">
-        <span class="livroteca-hero__eyebrow">Bode · Pina · Recife</span>
-        <h1 class="livroteca-hero__title">Livroteca Brincante do Pina.</h1>
-        <p class="livroteca-hero__lede">
-          Community library, space for culture, popular education and gathering —
-          run by Bode residents, sustained by donations, volunteering and, now,
-          a shop of our own.
-        </p>
+        <span class="livroteca-hero__eyebrow">{eyebrow}</span>
+        <h1 class="livroteca-hero__title">{heroTitle}</h1>
+        <p class="livroteca-hero__lede">{heroLede}</p>
       </div>
     </div>
   </section>

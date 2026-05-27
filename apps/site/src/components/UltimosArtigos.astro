@@ -26,8 +26,10 @@ const prefix = locale === "en" ? "/en" : "";
     const badgeLabel = isEvent ? t.events.event : t.events.news;
     return (
       <a href={`${prefix}/as-atividades/${a.slug}`} class="card">
-        {cover && (
+        {cover ? (
           <div class="card__media" style={`background-image: url('${cover}');`}></div>
+        ) : (
+          <div class={`card__media card__media--fallback${isEvent ? " card__media--evento" : ""}`} aria-hidden="true"></div>
         )}
         <div class="card__body">
           <span class={`badge ${badgeClass}`}>{badgeLabel}</span>

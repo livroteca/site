@@ -43,6 +43,9 @@
     "event_details": "Detalhes do evento"
   },
   "translation_fallback": "Esta página ainda não foi traduzida. Mostrando a versão em português.",
+  "a11y": {
+    "skip_to_content": "Pular para o conteúdo principal"
+  },
   "podcast": {
     "title": "A Voz da Lama",
     "subtitle": "podcast da Livroteca",

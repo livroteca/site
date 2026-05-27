@@ -4,28 +4,59 @@ export default defineType({
   name: "paginaInstitucional",
   title: "Página institucional",
   type: "document",
+  description:
+    "Sobrescreve o hero (etiqueta + título + lede) das páginas estáticas. Identificadores aceitos: home, a-livroteca, doar, voluntariar, loja.",
   fields: [
     defineField({
       name: "key",
       title: "Identificador",
       type: "string",
       description:
-        "Identificador fixo da página: a-livroteca, doar, voluntariar, loja, transparencia, etc.",
+        "Fixo. Valores aceitos: home, a-livroteca, doar, voluntariar, loja.",
+      options: {
+        list: [
+          { title: "Home (/)", value: "home" },
+          { title: "A Livroteca (/a-livroteca)", value: "a-livroteca" },
+          { title: "Doar (/doar)", value: "doar" },
+          { title: "Voluntariar (/voluntariar)", value: "voluntariar" },
+          { title: "Loja (/loja)", value: "loja" },
+        ],
+      },
       validation: (r) => r.required(),
+    }),
+    defineField({
+      name: "eyebrow",
+      title: "Etiqueta (pequeno texto acima do título)",
+      type: "localizedString",
+      description:
+        'Ex.: "Bode · Pina · Recife". Vazio = mantém o texto hardcoded.',
     }),
     defineField({
       name: "title",
-      title: "Título",
+      title: "Título principal",
       type: "localizedString",
-      validation: (r) => r.required(),
+      description: "Vazio = mantém o título hardcoded.",
+    }),
+    defineField({
+      name: "lede",
+      title: "Lede / parágrafo de introdução",
+      type: "localizedText",
+      description:
+        "Parágrafo curto sob o título. Vazio = mantém o parágrafo hardcoded.",
     }),
     defineField({
       name: "body",
-      title: "Conteúdo",
+      title: "Conteúdo rico (opcional)",
       type: "localizedPortableText",
+      description:
+        "Usado apenas pela página /loja por enquanto. Para outras páginas, deixar vazio.",
     }),
   ],
   preview: {
     select: { title: "title.pt", subtitle: "key" },
+    prepare: ({ title, subtitle }) => ({
+      title: title || `[sem título]`,
+      subtitle: `page: ${subtitle}`,
+    }),
   },
 });

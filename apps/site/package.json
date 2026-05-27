@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "gen:og": "node scripts/gen-og.mjs"
+    "gen:og": "node scripts/gen-og.mjs",
+    "gen:favicons": "node scripts/gen-favicons.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",

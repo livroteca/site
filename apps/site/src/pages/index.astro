@@ -4,7 +4,13 @@ import Calendario from "../components/Calendario.astro";
 import ProximosEventos from "../components/ProximosEventos.astro";
 import UltimosArtigos from "../components/UltimosArtigos.astro";
 import { getEvents, expandOccurrences } from "../lib/events";
-import { getRecentArticles } from "../lib/content";
+import {
+  getRecentArticles,
+  getPaginaByKey,
+  paginaEyebrowFor,
+  paginaTitleFor,
+  paginaLedeFor,
+} from "../lib/content";
 
 const locale = "pt-BR" as const;
 const now = new Date();
@@ -12,12 +18,17 @@ const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 const windowStart = new Date(now.getFullYear(), now.getMonth() - 6, 1);
 const windowEnd = new Date(now.getFullYear(), now.getMonth() + 12, 0);
 
-const [events, recentArticles] = await Promise.all([
+const [events, recentArticles, pagina] = await Promise.all([
   getEvents(),
   getRecentArticles(3),
+  getPaginaByKey("home"),
 ]);
 const occurrences = expandOccurrences(events, windowStart, windowEnd, locale);
 const upcoming = occurrences.filter((o) => o.start >= now);
+
+const eyebrow = paginaEyebrowFor(pagina, locale) ?? "Bode · Pina · Recife";
+const heroTitle = paginaTitleFor(pagina, locale) ?? "Cultura, leitura e brincadeira no coração do Bode.";
+const heroLede = paginaLedeFor(pagina, locale) ?? "Há quase 30 anos, a Livroteca Brincante do Pina abre suas portas para crianças e jovens da comunidade — biblioteca, capoeira, música, circo, cinema e poesia, conduzidos por Kcal Gomes e por uma rede de moradores.";
 ---
 
 <Layout>
@@ -25,13 +36,9 @@ const upcoming = occurrences.filter((o) => o.start >= now);
     <div class="hero__bg" aria-hidden="true"></div>
     <div class="container">
       <div class="hero__inner">
-        <span class="hero__eyebrow">Bode · Pina · Recife</span>
-        <h1 class="hero__title">Cultura, leitura e brincadeira no coração do Bode.</h1>
-        <p class="hero__lede">
-          Há quase 30 anos, a Livroteca Brincante do Pina abre suas portas para
-          crianças e jovens da comunidade — biblioteca, capoeira, música, circo,
-          cinema e poesia, conduzidos por Kcal Gomes e por uma rede de moradores.
-        </p>
+        <span class="hero__eyebrow">{eyebrow}</span>
+        <h1 class="hero__title">{heroTitle}</h1>
+        <p class="hero__lede">{heroLede}</p>
         <div class="hero__actions">
           <button type="button" class="btn btn--secundario" data-open-modal>Ajudar</button>
           <a href="/a-livroteca" class="btn btn--texto" style="color: var(--cor-papel);">Conhecer a Livroteca →</a>

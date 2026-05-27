@@ -43,6 +43,9 @@
     "event_details": "Event details"
   },
   "translation_fallback": "This page hasn't been translated yet. Showing the Portuguese version.",
+  "a11y": {
+    "skip_to_content": "Skip to main content"
+  },
   "podcast": {
     "title": "A Voz da Lama",
     "subtitle": "Livroteca's podcast",

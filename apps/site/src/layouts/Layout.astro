@@ -18,6 +18,7 @@ import {
   getLocaleFromUrl,
   htmlLang,
   localizePath,
+  useTranslations,
   type Locale,
 } from "../lib/i18n";
 
@@ -33,6 +34,7 @@ interface Props {
 }
 
 const locale: Locale = Astro.props.locale ?? getLocaleFromUrl(Astro.url);
+const t = useTranslations(locale);
 
 const SITE_URL = "https://livrotecabrincantedopina.org";
 const DEFAULT_OG = "/images/og-default.png";
@@ -130,7 +132,11 @@ const orgJsonLd = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <link rel="icon" type="image/png" href="/images/logolivro.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#EBC926" />
 
     {isHome && (
       <script
@@ -156,6 +162,8 @@ const orgJsonLd = {
     <ClientRouter />
   </head>
   <body data-variant="riso" data-locale={locale}>
+    <a href="#main" class="skip-link">{t.a11y.skip_to_content}</a>
+
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
       <defs>
         <symbol id="estrelinha" viewBox="-2.5 -2.5 5 5" overflow="visible">
@@ -166,7 +174,7 @@ const orgJsonLd = {
 
     <Header locale={locale} />
     {translationFallback && <TranslationBanner locale={locale} />}
-    <main>
+    <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer locale={locale} />

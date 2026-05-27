@@ -82,13 +82,36 @@ Quando os MP3s forem hospedados no R2 (TODO 🟡 polissage), basta editar cada e
 
 ---
 
-## 4. Já existentes / fallback automático
+## 4. `paginaInstitucional` — sobrescrever o hero das páginas estáticas
 
-Estes tipos já funcionam sem documentos criados (mostram estado vazio ou usam dados existentes) :
+Permite a Kcal editar o **hero** (etiqueta + título + lede) das páginas estáticas, sem mexer no código. Crie um documento por página, com o `key` correspondente :
+
+| `key` | Página afetada | Comportamento |
+|---|---|---|
+| `home` | `/` e `/en/` | sobrescreve eyebrow, título e lede do hero |
+| `a-livroteca` | `/a-livroteca` (+ EN) | sobrescreve hero (o restante da narrativa fica hardcoded) |
+| `doar` | `/doar` (+ EN) | sobrescreve hero (o resto da página = cards PIX/MP/bank vem de `configSite`) |
+| `voluntariar` | `/voluntariar` (+ EN) | sobrescreve hero (cards + form ficam hardcoded) |
+| `loja` | `/loja` (+ EN) | sobrescreve hero **e** suporta body Portable Text para conteúdo rico (úteis quando a loja for descrita) |
+
+Campos por documento :
+
+- **Identificador** : escolher na lista (`home`, `a-livroteca`, `doar`, `voluntariar`, `loja`)
+- **Etiqueta** (pt/en) : pequena linha acima do título. Ex.: "Bode · Pina · Recife"
+- **Título principal** (pt/en) : grande título do hero
+- **Lede** (pt/en) : parágrafo de introdução curto
+- **Conteúdo rico** (pt/en, opcional) : Portable Text — usado só pela página `/loja`
+
+**Comportamento** : se um campo fica vazio, o site usa o texto hardcoded em fallback. Se o documento inteiro não existe, tudo continua hardcoded. Podemos criar progressivamente.
+
+---
+
+## 5. Já existentes / fallback automático
+
+Estes tipos já funcionam sem documentos criados :
 
 - **`artigo`** — artigos + eventos. Sem nenhum → "Nenhum artigo publicado" / "Nenhum evento programado". Crie quantos quiser.
 - **`documentoTransparencia`** — PDFs institucionais (ata, balanço…). Sem nenhum → /transparencia mostra a página vazia.
-- **`paginaInstitucional`** — pensado para /a-livroteca, /doar, /voluntariar, /loja, mas **ainda não conectado ao site**. Todo o texto dessas páginas continua hardcoded no código por enquanto.
 
 ---
 

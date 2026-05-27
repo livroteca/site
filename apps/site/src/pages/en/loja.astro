@@ -1,17 +1,47 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import {
+  getPaginaByKey,
+  paginaEyebrowFor,
+  paginaTitleFor,
+  paginaLedeFor,
+  paginaBodyHtmlFor,
+} from "../../lib/content";
+
 const locale = "en" as const;
+const pagina = await getPaginaByKey("loja");
+
+const eyebrow = paginaEyebrowFor(pagina, locale) ?? "Shop";
+const title = paginaTitleFor(pagina, locale) ?? "Livroteca products.";
+const lede =
+  paginaLedeFor(pagina, locale) ??
+  "Coming soon — the shop is a separate site (stack TBD). Each purchase helps self-sustain the project in the long term.";
+const bodyHtml = paginaBodyHtmlFor(pagina, locale);
 ---
 
 <Layout title="Shop — Livroteca Brincante do Pina" locale={locale}>
   <section>
     <div class="container">
-      <div class="section__label">Shop</div>
-      <h2 class="section__title">Livroteca products.</h2>
-      <p style="max-width: 60ch; margin-top: var(--space-6);">
-        Coming soon — the shop is a separate site (stack TBD). Each purchase
-        helps self-sustain the project in the long term.
-      </p>
+      <div class="section__label">{eyebrow}</div>
+      <h2 class="section__title">{title}</h2>
+      <p style="max-width: 60ch; margin-top: var(--space-6);">{lede}</p>
+      {bodyHtml && <div class="loja-body" set:html={bodyHtml} />}
     </div>
   </section>
 </Layout>
+
+<style>
+  .loja-body {
+    max-width: 65ch;
+    margin-top: var(--space-8);
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+  .loja-body :global(p) { margin: 0 0 var(--space-4); }
+  .loja-body :global(h2), .loja-body :global(h3) {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    margin: var(--space-8) 0 var(--space-3);
+  }
+  .loja-body :global(ul) { padding-left: var(--space-6); }
+</style>

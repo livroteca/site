@@ -1,6 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import VoluntariarForm from "../components/VoluntariarForm.astro";
+import {
+  getPaginaByKey,
+  paginaEyebrowFor,
+  paginaTitleFor,
+  paginaLedeFor,
+} from "../lib/content";
+
+const locale = "pt-BR" as const;
+const pagina = await getPaginaByKey("voluntariar");
+const eyebrow = paginaEyebrowFor(pagina, locale) ?? "Voluntariar";
+const title = paginaTitleFor(pagina, locale) ?? "A Livroteca funciona porque há gente que aparece.";
+const lede = paginaLedeFor(pagina, locale) ?? "A Livroteca não tem equipe contratada estável. Funciona porque há gente que aparece — para mediar leitura, dar oficinas, organizar o acervo, registrar em foto ou vídeo, ensinar uma habilidade, traduzir, comunicar. Voluntariado pode ser presencial no Bode ou remoto.";
 
 const tracks = [
   {
@@ -34,15 +46,9 @@ const tracks = [
 >
   <section>
     <div class="container" style="max-width: 880px;">
-      <div class="section__label">Voluntariar</div>
-      <h2 class="section__title">A Livroteca funciona porque há gente que aparece.</h2>
-      <p style="max-width: 62ch; margin-top: var(--space-4); font-size: 1.1rem; line-height: 1.55;">
-        A Livroteca não tem equipe contratada estável. Funciona porque há gente
-        que aparece — para mediar leitura, dar oficinas, organizar o acervo,
-        registrar em foto ou vídeo, ensinar uma habilidade, traduzir, comunicar.
-        Voluntariado pode ser <strong>presencial no Bode</strong> ou
-        <strong>remoto</strong>.
-      </p>
+      <div class="section__label">{eyebrow}</div>
+      <h2 class="section__title">{title}</h2>
+      <p style="max-width: 62ch; margin-top: var(--space-4); font-size: 1.1rem; line-height: 1.55;">{lede}</p>
 
       <div class="vol-grid" style="margin-top: var(--space-12);">
         {tracks.map((t) => (

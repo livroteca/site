@@ -118,6 +118,38 @@
       outline: 3px solid var(--cor-amarelo);
       outline-offset: 2px;
     }
+
+    /* A11y: skip link + generic focus ring for interactive elements */
+    .skip-link {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: var(--space-3) var(--space-5);
+      background: var(--cor-preto);
+      color: var(--cor-papel);
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      z-index: 9999;
+      transform: translateY(-150%);
+      transition: transform 150ms ease;
+    }
+    .skip-link:focus {
+      transform: translateY(0);
+      outline: 3px solid var(--cor-amarelo);
+      outline-offset: -3px;
+    }
+    a:focus-visible,
+    button:not(.btn):focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--cor-vermelho);
+      outline-offset: 2px;
+    }
+    main#main:focus { outline: none; }
     .btn--primario {
       background: var(--cor-azul);
       color: var(--cor-papel);
@@ -715,6 +747,23 @@
       background-size: cover;
       background-position: center;
       border-bottom: var(--borda-fina);
+    }
+    .card__media--fallback {
+      background:
+        radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1.5px) 0 0 / 18px 18px,
+        var(--cor-amarelo);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+    .card__media--fallback::after {
+      content: "";
+      width: 56px;
+      height: 56px;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231A1A1A' opacity='0.55'><path d='M21 4H3a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1zM11 18H4V6h7v12zm9 0h-7V6h7v12z'/></svg>") center / contain no-repeat;
+    }
+    .card__media--fallback.card__media--evento::after {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231A1A1A' stroke-width='2' opacity='0.6'><rect x='3' y='5' width='18' height='16' rx='2'/><path d='M16 3v4M8 3v4M3 11h18'/></svg>");
     }
     .card__body { padding: var(--space-4); display: grid; gap: var(--space-2); }
     .card__title {

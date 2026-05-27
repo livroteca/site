@@ -1,8 +1,19 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import VoluntariarForm from "../../components/VoluntariarForm.astro";
+import {
+  getPaginaByKey,
+  paginaEyebrowFor,
+  paginaTitleFor,
+  paginaLedeFor,
+} from "../../lib/content";
 
 const locale = "en" as const;
+const pagina = await getPaginaByKey("voluntariar");
+const eyebrow = paginaEyebrowFor(pagina, locale) ?? "Volunteer";
+const title = paginaTitleFor(pagina, locale) ?? "The Livroteca runs because people show up.";
+const lede = paginaLedeFor(pagina, locale) ?? "The Livroteca has no stable paid team. It runs because people show up — to mediate reading, run workshops, organise the library, document with photo or video, teach a skill, translate, communicate. Volunteering can be in person in Bode or remote.";
+
 const tracks = [
   {
     label: "In person in Bode",
@@ -36,14 +47,9 @@ const tracks = [
 >
   <section>
     <div class="container" style="max-width: 880px;">
-      <div class="section__label">Volunteer</div>
-      <h2 class="section__title">The Livroteca runs because people show up.</h2>
-      <p style="max-width: 62ch; margin-top: var(--space-4); font-size: 1.1rem; line-height: 1.55;">
-        The Livroteca has no stable paid team. It runs because people show up —
-        to mediate reading, run workshops, organise the library, document with
-        photo or video, teach a skill, translate, communicate. Volunteering
-        can be <strong>in person in Bode</strong> or <strong>remote</strong>.
-      </p>
+      <div class="section__label">{eyebrow}</div>
+      <h2 class="section__title">{title}</h2>
+      <p style="max-width: 62ch; margin-top: var(--space-4); font-size: 1.1rem; line-height: 1.55;">{lede}</p>
 
       <div class="vol-grid" style="margin-top: var(--space-12);">
         {tracks.map((t) => (
