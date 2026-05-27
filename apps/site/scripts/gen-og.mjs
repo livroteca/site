@@ -27,12 +27,12 @@ const svg = `
   <rect width="${W}" height="${H}" fill="#EBC926"/>
   <rect width="${W}" height="${H}" fill="url(#dots)"/>
 
-  <!-- Riso shadow rectangles (offset) -->
-  <rect x="92" y="92" width="1016" height="466" fill="#4A7C3A"/>
-  <rect x="80" y="80" width="1016" height="466" fill="#C03E2D"/>
+  <!-- Riso shadow rectangles: green offset bottom-right, red offset top-left -->
+  <rect x="105" y="105" width="1010" height="460" fill="#4A7C3A"/>
+  <rect x="75" y="75" width="1010" height="460" fill="#C03E2D"/>
 
-  <!-- Paper card -->
-  <rect x="86" y="86" width="1016" height="466" fill="#FAF7F0" stroke="#1A1A1A" stroke-width="4"/>
+  <!-- Paper card centered between the two shadows -->
+  <rect x="90" y="90" width="1010" height="460" fill="#FAF7F0" stroke="#1A1A1A" stroke-width="4"/>
 
   <!-- Logo (left side) -->
   <image href="${logoDataUrl}" x="140" y="170" width="280" height="280" preserveAspectRatio="xMidYMid meet"/>
