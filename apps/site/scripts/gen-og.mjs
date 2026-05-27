@@ -49,8 +49,8 @@ const svg = `
     </text>
   </g>
 
-  <!-- Caveat handwriting accent -->
-  <text x="520" y="430" font-family="Caveat, Snell Roundhand, cursive" font-size="42" fill="#C03E2D">no coração do Bode.</text>
+  <!-- Tagline accent -->
+  <text x="520" y="440" font-family="Impact, Arial Black, Helvetica, sans-serif" font-weight="900" font-size="44" fill="#C03E2D" letter-spacing="1">O BODE É O BIXO.</text>
 
   <!-- Bottom location chip -->
   <g transform="translate(86, 568)">
