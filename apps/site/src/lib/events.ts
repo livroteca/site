@@ -106,7 +106,7 @@ export function expandOccurrences(
     try {
       set.rrule(rrulestr(lines.join("\n")) as any);
     } catch (err) {
-      console.warn(`[events] RRULE invalide pour ${ev._id}: ${err}`);
+      console.warn(`[events] RRULE inválida para ${ev._id}: ${err}`);
       continue;
     }
     for (const exDate of ev.event.exceptions ?? []) {

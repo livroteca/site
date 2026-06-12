@@ -118,6 +118,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   });
 
   if (!resend.ok) {
+    const detail = await resend.text().catch(() => "");
+    console.error(`[voluntariar] Resend ${resend.status}: ${detail}`);
     return json({ ok: false, error: "send_failed" }, 502);
   }
 

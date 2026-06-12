@@ -46,7 +46,7 @@ const categoriaLabel = (c?: string) => (c ? CATEGORIA_EN[c] ?? c : "Document");
             </div>
             <div class="transp__body">
               <span class="transp__cat">{categoriaLabel(d.category)}</span>
-              <div class="transp__title">{titleFor(d as any, locale)}</div>
+              <div class="transp__title">{titleFor(d, locale)}</div>
               <div class="transp__date">{fmtDate(d.date, locale)}</div>
             </div>
             <div class="transp__arrow" aria-hidden="true">↓</div>

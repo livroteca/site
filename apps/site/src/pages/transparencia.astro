@@ -34,7 +34,7 @@ const docs = await getDocumentosTransparencia();
             </div>
             <div class="transp__body">
               <span class="transp__cat">{categoriaLabel(d.category)}</span>
-              <div class="transp__title">{titleFor(d as any)}</div>
+              <div class="transp__title">{titleFor(d)}</div>
               <div class="transp__date">{fmtDate(d.date)}</div>
             </div>
             <div class="transp__arrow" aria-hidden="true">↓</div>
