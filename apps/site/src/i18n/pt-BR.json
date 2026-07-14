@@ -3,6 +3,7 @@
   "nav": {
     "home": "Home",
     "livroteca": "A Livroteca",
+    "sobre": "Sobre Nós",
     "atividades": "As Atividades",
     "doar": "Doar",
     "voluntariar": "Voluntariar",
@@ -58,7 +59,8 @@
     "paused": "Pausado",
     "episodes_label": "Episódios",
     "fallback_title": "A Voz da Lama no TuneIn",
-    "fallback_subtitle": "Escute os episódios no TuneIn"
+    "fallback_subtitle": "Escute os episódios no TuneIn",
+    "seek": "Linha do tempo do episódio"
   },
   "voluntariar_form": {
     "title": "Inscreva-se",

@@ -6,6 +6,7 @@ import pessoa from "./pessoa";
 import paginaInstitucional from "./paginaInstitucional";
 import episodioPodcast from "./episodioPodcast";
 import documentoTransparencia from "./documentoTransparencia";
+import colaborador from "./colaborador";
 import configSite from "./configSite";
 
 export const schemaTypes = [
@@ -17,5 +18,6 @@ export const schemaTypes = [
   paginaInstitucional,
   episodioPodcast,
   documentoTransparencia,
+  colaborador,
   configSite,
 ];

@@ -10,7 +10,6 @@ import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import PodcastPlayer from "../components/PodcastPlayer.astro";
 import AjudarFab from "../components/AjudarFab.astro";
 import AjudarModal from "../components/AjudarModal.astro";
 import TranslationBanner from "../components/TranslationBanner.astro";
@@ -150,12 +149,6 @@ const orgJsonLd = {
       />
     )}
 
-    <script>
-      import { setWasmUrl } from "@lottiefiles/dotlottie-wc";
-      import wasmUrl from "@lottiefiles/dotlottie-web/dist/dotlottie-player.wasm?url";
-      setWasmUrl(wasmUrl);
-    </script>
-
     {cfAnalyticsToken && (
       <script
         defer
@@ -184,7 +177,6 @@ const orgJsonLd = {
     </main>
     <Footer locale={locale} />
 
-    <PodcastPlayer locale={locale} />
     <AjudarFab locale={locale} />
     <AjudarModal locale={locale} />
   </body>

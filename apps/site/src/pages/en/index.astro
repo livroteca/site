@@ -27,8 +27,8 @@ const occurrences = expandOccurrences(events, windowStart, windowEnd, locale);
 const upcoming = occurrences.filter((o) => o.start >= now);
 
 const eyebrow = paginaEyebrowFor(pagina, locale) ?? "Bode · Pina · Recife";
-const heroTitle = paginaTitleFor(pagina, locale) ?? "Culture, reading and play in the heart of Bode.";
-const heroLede = paginaLedeFor(pagina, locale) ?? "For nearly 30 years, Livroteca Brincante do Pina has opened its doors to children and youth from the community — library, capoeira, music, circus, cinema and poetry, led by Kcal Gomes and a network of residents.";
+const heroTitle = paginaTitleFor(pagina, locale) ?? "Art and culture as a right, in the heart of Bode.";
+const heroLede = paginaLedeFor(pagina, locale) ?? "Livroteca Brincante do Pina is a community association in the Bode, Recife, that for nearly 30 years has defended the human rights of children and young people through art, reading and culture.";
 ---
 
 <Layout locale={locale}>

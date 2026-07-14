@@ -1,5 +1,6 @@
 ---
 import { useTranslations, localizePath, type Locale } from "../lib/i18n";
+import PodcastPlayer from "./PodcastPlayer.astro";
 
 interface Props {
   locale: Locale;
@@ -16,6 +17,7 @@ const home = locale === "en" ? "/en/" : "/";
 const links = [
   { href: home, label: t.nav.home, exact: true },
   { href: `${prefix}/a-livroteca`, label: t.nav.livroteca },
+  { href: `${prefix}/sobre-nos`, label: t.nav.sobre },
   { href: `${prefix}/as-atividades`, label: t.nav.atividades },
   { href: `${prefix}/doar`, label: t.nav.doar },
   { href: `${prefix}/voluntariar`, label: t.nav.voluntariar },
@@ -38,6 +40,7 @@ const enPath = localizePath("en", pathname);
       })}
     </nav>
     <div style="display:flex; gap: var(--space-3); align-items:center;">
+      <PodcastPlayer locale={locale} />
       <div class="header__lang" role="group" aria-label="Language">
         <a href={ptPath} data-astro-reload class={locale === "pt-BR" ? "is-active" : undefined} aria-current={locale === "pt-BR" ? "true" : undefined}>PT</a>
         <span aria-hidden="true">|</span>

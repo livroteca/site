@@ -3,6 +3,7 @@
   "nav": {
     "home": "Home",
     "livroteca": "About",
+    "sobre": "About Us",
     "atividades": "Activities",
     "doar": "Donate",
     "voluntariar": "Volunteer",
@@ -58,7 +59,8 @@
     "paused": "Paused",
     "episodes_label": "Episodes",
     "fallback_title": "A Voz da Lama on TuneIn",
-    "fallback_subtitle": "Listen to the episodes on TuneIn"
+    "fallback_subtitle": "Listen to the episodes on TuneIn",
+    "seek": "Episode timeline"
   },
   "voluntariar_form": {
     "title": "Sign up",

@@ -1,0 +1,513 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import {
+  getPessoas,
+  pessoaPhotoUrl,
+  pessoaRoleFor,
+  pessoaBioFor,
+  getDocumentosTransparencia,
+  titleFor,
+  categoriaLabel,
+  fmtDate,
+  getColaboradores,
+  colaboradorLogoUrl,
+  getPaginaByKey,
+  paginaEyebrowFor,
+  paginaTitleFor,
+  paginaLedeFor,
+  paginaBodyHtmlFor,
+} from "../../lib/content";
+
+const locale = "en" as const;
+const prefix = "/en";
+
+const [pessoas, docs, colaboradores, pagina] = await Promise.all([
+  getPessoas(),
+  getDocumentosTransparencia(),
+  getColaboradores(),
+  getPaginaByKey("sobre-nos"),
+]);
+
+const eyebrow = paginaEyebrowFor(pagina, locale) ?? "The association";
+const heroTitle = paginaTitleFor(pagina, locale) ?? "Human rights through art and culture.";
+const heroLede = paginaLedeFor(pagina, locale) ?? "Livroteca Brincante do Pina is a self-managed community association based in the Bode, in Recife, dedicated to defending human rights through art, reading and culture.";
+const conceitoHtml = paginaBodyHtmlFor(pagina, locale);
+
+const grupos = [
+  {
+    tipo: "apoio_recorrente",
+    label: "Recurring support",
+    desc: "Businesses and donors who support the Livroteca on a recurring basis.",
+  },
+  {
+    tipo: "parceiro",
+    label: "Partners",
+    desc: "Organisations and institutions we collaborate with.",
+  },
+  {
+    tipo: "rede",
+    label: "Networks",
+    desc: "Networks and alliances we are part of.",
+  },
+]
+  .map((g) => ({ ...g, itens: colaboradores.filter((c) => c.tipo === g.tipo) }))
+  .filter((g) => g.itens.length > 0);
+---
+
+<Layout
+  title="About Us — Livroteca Brincante do Pina"
+  description="The association: mission, vision and values, the team, transparency documents and partners of Livroteca Brincante do Pina."
+  locale={locale}
+>
+  <section class="sobre-hero" aria-label="Introduction">
+    <div class="sobre-hero__bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="sobre-hero__inner">
+        <span class="sobre-hero__eyebrow">{eyebrow}</span>
+        <h1 class="sobre-hero__title">{heroTitle}</h1>
+        <p class="sobre-hero__lede">{heroLede}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO WE ARE / MISSION VISION VALUES -->
+  <section>
+    <div class="container sobre-prose">
+      <div class="section__label">Who we are</div>
+      <h2 class="section__title">Mission, vision and values.</h2>
+
+      {conceitoHtml ? (
+        <div class="sobre-rich" set:html={conceitoHtml} />
+      ) : (
+        <div class="mvv">
+          <article class="mvv__item">
+            <h3 class="mvv__title">Mission</h3>
+            <p>
+              To defend and promote the human rights of children, teenagers and
+              young people of the Bode community through art, reading and culture.
+            </p>
+          </article>
+          <article class="mvv__item">
+            <h3 class="mvv__title">Vision</h3>
+            <p>
+              A community where access to culture and education is a lived right,
+              not a privilege — with the favela recognised as a territory of
+              creation, not of absence.
+            </p>
+          </article>
+          <article class="mvv__item">
+            <h3 class="mvv__title">Values</h3>
+            <ul>
+              <li>Community self-management</li>
+              <li>Culture and education as a right</li>
+              <li>Anti-racism and Afro-Brazilian culture</li>
+              <li>Staying within the territory</li>
+              <li>Care for children and youth</li>
+              <li>Transparency and accountability</li>
+            </ul>
+          </article>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section style="background: var(--cor-superficie); border-top: var(--borda-fina); border-bottom: var(--borda-fina);">
+    <div class="container">
+      <div class="sobre-prose" style="margin-bottom: var(--space-8);">
+        <div class="section__label">Our team</div>
+        <h2 class="section__title">Who takes care of the Livroteca.</h2>
+        <p>
+          The Livroteca is run by a network of residents, educators and
+          volunteers. Meet some of the people responsible for the project's
+          areas.
+        </p>
+      </div>
+
+      <div class="equipe">
+        {pessoas.map((p) => {
+          const photo = pessoaPhotoUrl(p, 360);
+          const role = pessoaRoleFor(p, locale);
+          const bio = pessoaBioFor(p, locale);
+          return (
+            <article class="membro">
+              {photo ? (
+                <img src={photo} alt={p.name} class="membro__photo" loading="lazy" />
+              ) : (
+                <div class="membro__photo membro__photo--vazia" aria-hidden="true"></div>
+              )}
+              <div class="membro__body">
+                <div class="membro__name">{p.name}</div>
+                {role && <div class="membro__role">{role}</div>}
+                {bio && <p class="membro__bio">{bio}</p>}
+              </div>
+            </article>
+          );
+        })}
+
+        <a class="membro membro--ghost" href={`${prefix}/voluntariar`}>
+          <div class="membro__photo membro__photo--ghost" aria-hidden="true">+</div>
+          <div class="membro__body">
+            <div class="membro__name">Could your photo be here?</div>
+            <p class="membro__bio">
+              We're looking for people to take care of the project's areas. Get
+              in touch to volunteer.
+            </p>
+            <span class="membro__cta">I want to volunteer →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRANSPARENCY -->
+  <section id="transparencia">
+    <div class="container sobre-prose">
+      <div class="section__label">Transparency</div>
+      <h2 class="section__title">Institutional documents.</h2>
+      <p>
+        The Livroteca runs on community dedication and donations. Here we make
+        available the statutes, activity reports, annual accounts and the board.
+      </p>
+
+      <div class="transp" style="margin-top: var(--space-8);">
+        {docs.length === 0 && (
+          <p style="color: var(--cor-texto-fraco);">
+            No documents published yet. We'll be back to this section soon.
+          </p>
+        )}
+        {docs.map((d) => (
+          <a class="transp__item" href={d.fileUrl} target="_blank" rel="noopener">
+            <div class="transp__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <path d="M14 2v6h6"/>
+              </svg>
+            </div>
+            <div class="transp__body">
+              <span class="transp__cat">{categoriaLabel(d.category)}</span>
+              <div class="transp__title">{titleFor(d, locale)}</div>
+              <div class="transp__date">{fmtDate(d.date, locale)}</div>
+            </div>
+            <div class="transp__arrow" aria-hidden="true">↓</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS & SUPPORTERS -->
+  <section style="background: var(--cor-superficie); border-top: var(--borda-fina); border-bottom: var(--borda-fina);">
+    <div class="container sobre-prose" style="max-width: 980px;">
+      <div class="section__label">Partners & supporters</div>
+      <h2 class="section__title">Who walks with us.</h2>
+      <p>
+        The Livroteca exists thanks to a network of businesses, institutions and
+        collectives that support the project and walk alongside the Bode
+        community.
+      </p>
+
+      {grupos.length === 0 && (
+        <p style="color: var(--cor-texto-fraco); margin-top: var(--space-6);">
+          We'll soon list our partners and supporters here.
+        </p>
+      )}
+
+      {grupos.map((g) => (
+        <div class="parceiros-grupo">
+          <h3 class="parceiros-grupo__title">{g.label}</h3>
+          <p class="parceiros-grupo__desc">{g.desc}</p>
+          <ul class="parceiros">
+            {g.itens.map((c) => {
+              const logo = colaboradorLogoUrl(c, 320);
+              const Inner = (
+                <>
+                  {logo ? (
+                    <img src={logo} alt={c.name} class="parceiro__logo" loading="lazy" />
+                  ) : (
+                    <span class="parceiro__name">{c.name}</span>
+                  )}
+                </>
+              );
+              return (
+                <li class="parceiro">
+                  {c.url ? (
+                    <a href={c.url} target="_blank" rel="noopener" title={c.name}>{Inner}</a>
+                  ) : (
+                    <span title={c.name}>{Inner}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* HERO */
+  .sobre-hero {
+    position: relative;
+    isolation: isolate;
+    color: var(--cor-papel);
+    overflow: hidden;
+    border-bottom: var(--borda-xilo);
+  }
+  .sobre-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      linear-gradient(135deg, rgba(6,114,42,0.88), rgba(6,114,42,0.62)),
+      url("/images/quem_somos.png") center / cover no-repeat;
+  }
+  .sobre-hero__inner {
+    padding: calc(var(--space-16) + 16px) 0 var(--space-12);
+    display: grid;
+    gap: var(--space-4);
+    max-width: 800px;
+  }
+  @media (min-width: 1024px) {
+    .sobre-hero__inner { padding: calc(var(--space-24) + 8px) 0 var(--space-16); }
+  }
+  .sobre-hero__eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cor-amarelo);
+  }
+  .sobre-hero__title {
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+  @media (min-width: 768px) { .sobre-hero__title { font-size: 56px; } }
+  @media (min-width: 1024px) { .sobre-hero__title { font-size: 72px; } }
+  .sobre-hero__lede { font-size: 1.1rem; max-width: 56ch; }
+
+  /* PROSE */
+  .sobre-prose { max-width: 760px; }
+  .sobre-prose > p {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    margin: var(--space-4) 0 0;
+  }
+
+  /* MISSION VISION VALUES */
+  .mvv {
+    display: grid;
+    gap: var(--space-5);
+    margin-top: var(--space-8);
+  }
+  @media (min-width: 760px) { .mvv { grid-template-columns: repeat(3, 1fr); } }
+  .mvv__item {
+    background: var(--cor-superficie);
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    padding: var(--space-5);
+  }
+  body[data-variant="riso"] .mvv__item {
+    box-shadow: 4px 4px 0 var(--cor-verde);
+  }
+  .mvv__title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: var(--space-3);
+  }
+  .mvv__item p { font-size: 1rem; line-height: 1.6; }
+  .mvv__item ul {
+    margin: 0;
+    padding-left: var(--space-5);
+    display: grid;
+    gap: var(--space-2);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .sobre-rich { margin-top: var(--space-6); font-size: 1.05rem; line-height: 1.65; }
+  .sobre-rich :global(p) { margin: 0 0 var(--space-4); }
+
+  /* TEAM */
+  .equipe {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 560px) { .equipe { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 920px) { .equipe { grid-template-columns: repeat(3, 1fr); } }
+  .membro {
+    background: var(--cor-branco);
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    padding: var(--space-5);
+    display: grid;
+    gap: var(--space-4);
+    text-decoration: none;
+    color: var(--cor-texto);
+  }
+  body[data-variant="riso"] .membro {
+    box-shadow: 4px 4px 0 var(--cor-verde);
+  }
+  .membro__photo {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: var(--borda-fina);
+    border-radius: var(--radius-sm);
+    display: block;
+  }
+  .membro__photo--vazia {
+    background:
+      radial-gradient(var(--cor-borda-suave) 1.4px, transparent 1.4px) 0 0 / 12px 12px,
+      var(--cor-amarelo);
+  }
+  .membro__name {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .membro__role {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-verde);
+    margin-top: var(--space-1);
+  }
+  .membro__bio { font-size: 0.96rem; line-height: 1.55; margin: var(--space-3) 0 0; }
+
+  /* GHOST CARD */
+  .membro--ghost {
+    border-style: dashed;
+    background: transparent;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+  body[data-variant="riso"] .membro--ghost { box-shadow: none; }
+  .membro--ghost:hover { transform: translate(-2px, -2px); color: var(--cor-texto); }
+  body[data-variant="riso"] .membro--ghost:hover { box-shadow: 4px 4px 0 var(--cor-verde); }
+  .membro__photo--ghost {
+    width: 100%;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--cor-verde);
+    border: var(--borda-fina);
+    border-style: dashed;
+    border-radius: var(--radius-sm);
+    background: transparent;
+  }
+  .membro__cta {
+    display: inline-block;
+    margin-top: var(--space-3);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cor-verde);
+  }
+
+  /* TRANSPARENCY */
+  .transp { display: flex; flex-direction: column; gap: var(--space-3); }
+  .transp__item {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: var(--space-4);
+    align-items: center;
+    background: var(--cor-superficie);
+    border: var(--borda-grossa);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    text-decoration: none;
+    color: var(--cor-texto);
+    box-shadow: var(--sombra-bloco-sm);
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+  .transp__item:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--sombra-bloco-md);
+    color: var(--cor-texto);
+  }
+  body[data-variant="riso"] .transp__item {
+    box-shadow: 3px 3px 0 var(--cor-amarelo), -2px -2px 0 var(--cor-verde);
+  }
+  body[data-variant="riso"] .transp__item:hover {
+    box-shadow: 5px 5px 0 var(--cor-amarelo), -3px -3px 0 var(--cor-verde);
+  }
+  .transp__icon {
+    width: 48px; height: 48px;
+    display: grid; place-items: center;
+    background: var(--cor-amarelo);
+    border: var(--borda-fina);
+    border-radius: var(--radius-sm);
+    color: var(--cor-preto);
+  }
+  .transp__cat {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-verde);
+  }
+  .transp__title { font-weight: 600; font-size: 1.05rem; margin-top: 2px; }
+  .transp__date {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cor-texto-fraco);
+    margin-top: 4px;
+  }
+  .transp__arrow { font-family: var(--font-display); font-size: 1.4rem; color: var(--cor-texto-fraco); }
+
+  /* PARTNERS */
+  .parceiros-grupo { margin-top: var(--space-8); }
+  .parceiros-grupo__title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .parceiros-grupo__desc { color: var(--cor-texto-fraco); margin-top: var(--space-1); }
+  .parceiros {
+    list-style: none;
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-4);
+  }
+  .parceiro a, .parceiro > span {
+    display: grid;
+    place-items: center;
+    min-height: 90px;
+    padding: var(--space-4);
+    background: var(--cor-branco);
+    border: var(--borda-fina);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--cor-texto);
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+  .parceiro a:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--sombra-bloco-sm);
+    color: var(--cor-texto);
+  }
+  .parceiro__logo { max-width: 100%; max-height: 56px; object-fit: contain; display: block; }
+  .parceiro__name {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.1;
+  }
+</style>

@@ -116,7 +116,7 @@ export function pixQrUrl(qr: SanityImageRef | undefined, width = 480): string | 
 // paginaInstitucional — overrides hero of static pages
 // ──────────────────────────────────────────────────────────────
 
-export type PaginaKey = "home" | "a-livroteca" | "doar" | "voluntariar" | "loja";
+export type PaginaKey = "home" | "a-livroteca" | "sobre-nos" | "doar" | "voluntariar" | "loja";
 
 export interface PaginaInstitucional {
   _id: string;
@@ -184,6 +184,14 @@ export async function getPessoaBySlug(slug: string): Promise<Pessoa | null> {
   );
 }
 
+export async function getPessoas(): Promise<Pessoa[]> {
+  return sanity.fetch(
+    `*[_type == "pessoa"] | order(coalesce(order, 999) asc, name asc){
+      _id, name, "slug": slug.current, role, bio, photo
+    }`
+  );
+}
+
 export function pessoaPhotoUrl(p: Pessoa | null | undefined, width = 480): string | null {
   if (!p?.photo?.asset?._ref) return null;
   return urlFor(p.photo).width(width).fit("crop").auto("format").url();
@@ -248,6 +256,33 @@ const CATEGORIA_LABELS: Record<string, string> = {
 
 export function categoriaLabel(c?: string): string {
   return c ? CATEGORIA_LABELS[c] ?? c : "Documento";
+}
+
+// ──────────────────────────────────────────────────────────────
+// Colaboradores (parceiros e apoiadores)
+// ──────────────────────────────────────────────────────────────
+
+export type ColaboradorTipo = "apoio_recorrente" | "parceiro" | "rede";
+
+export interface Colaborador {
+  _id: string;
+  name: string;
+  tipo: ColaboradorTipo;
+  url?: string;
+  logo?: SanityImageRef;
+}
+
+export async function getColaboradores(): Promise<Colaborador[]> {
+  return sanity.fetch(
+    `*[_type == "colaborador"] | order(coalesce(order, 999) asc, name asc){
+      _id, name, tipo, url, logo
+    }`
+  );
+}
+
+export function colaboradorLogoUrl(c: Colaborador, width = 320): string | null {
+  if (!c.logo?.asset?._ref) return null;
+  return urlFor(c.logo).width(width).fit("max").auto("format").url();
 }
 
 const portableTextComponents: Partial<PortableTextHtmlComponents> = {

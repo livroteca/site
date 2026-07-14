@@ -33,6 +33,13 @@ export default defineType({
       type: "image",
       options: { hotspot: true },
     }),
+    defineField({
+      name: "order",
+      title: "Ordem",
+      type: "number",
+      description:
+        "Ordem de exibição na página 'Sobre Nós' (menor aparece primeiro).",
+    }),
   ],
   preview: {
     select: { title: "name", subtitle: "role.pt", media: "photo" },

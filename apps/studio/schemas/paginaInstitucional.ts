@@ -5,18 +5,19 @@ export default defineType({
   title: "Página institucional",
   type: "document",
   description:
-    "Sobrescreve o hero (etiqueta + título + lede) das páginas estáticas. Identificadores aceitos: home, a-livroteca, doar, voluntariar, loja.",
+    "Sobrescreve o hero (etiqueta + título + lede) das páginas estáticas. Identificadores aceitos: home, a-livroteca, sobre-nos, doar, voluntariar, loja.",
   fields: [
     defineField({
       name: "key",
       title: "Identificador",
       type: "string",
       description:
-        "Fixo. Valores aceitos: home, a-livroteca, doar, voluntariar, loja.",
+        "Fixo. Valores aceitos: home, a-livroteca, sobre-nos, doar, voluntariar, loja.",
       options: {
         list: [
           { title: "Home (/)", value: "home" },
           { title: "A Livroteca (/a-livroteca)", value: "a-livroteca" },
+          { title: "Sobre Nós (/sobre-nos)", value: "sobre-nos" },
           { title: "Doar (/doar)", value: "doar" },
           { title: "Voluntariar (/voluntariar)", value: "voluntariar" },
           { title: "Loja (/loja)", value: "loja" },
@@ -49,7 +50,7 @@ export default defineType({
       title: "Conteúdo rico (opcional)",
       type: "localizedPortableText",
       description:
-        "Usado apenas pela página /loja por enquanto. Para outras páginas, deixar vazio.",
+        "Usado pela página /loja e pela seção 'Quem somos' de /sobre-nos (missão, visão, valores). Para outras páginas, deixar vazio.",
     }),
   ],
   preview: {
